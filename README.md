@@ -1,7 +1,7 @@
-# Master branch includes
-**Database_description and Whatsapp Automation**
-**Forclient Automation**
-3.Python Games
-4.Database Theory (SQL , NOSQL, SUMMARY)
-5.Open cv projects
-6.Phone call with python
+# Master branch includes<br><br>
+**Database_description and Whatsapp Automation**<br>
+**Forclient Automation**<br>
+**Python Games**<br>
+**Database Theory (SQL , NOSQL, SUMMARY)**<br>
+**Open cv projects**<br>
+**Phone call with python** <br>
