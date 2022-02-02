@@ -3,7 +3,7 @@ import sys
 import json
 import pyautogui
 from selenium import webdriver
-from whatsapp_automation import credentials 
+import credentials 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC

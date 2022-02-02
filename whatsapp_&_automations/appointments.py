@@ -106,7 +106,7 @@ class Dbconnection():
      
 d = Dbconnection()
 # d.appointments_for_today()
-d.check_Dbconnection()
+# d.check_Dbconnection()
 # print(d.list_of_tables)
 # print(recorded_messages)
 d.mydb.close()
