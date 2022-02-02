@@ -1,0 +1,335 @@
+  WHAT IS DATABASE?
+It is a PLACE manipulates,creates,delete data 
+THIS DATA IS STORED INSIDE COMPUTER SERVER
+(eg -facebook store lot of info about us in a database
+, same as ebay - u get price,product info -all via database- where the information is stored)
+
+postgres = database engine
+sql = work with databases -to give commands to databases
+SYNTAX=(SELECT column_name FROM table_name)
+sql is a programming language,BUILT IN 1974,very easy and powerful language
+
+This data is stored in tables - formed by rows & columns = called SCHEMA STRUCTURE
+thus we put our records in the schema structure
+
+Relational database = relationsip with the records of table(eg- a person may or may not have a car)
+
+POSTGRES-SQL 
+object-relational database management system ()RDBMS
+& its open source
+[other engines-mysql-licnese,oracle-license required,sql server]
+
+INSTALLATION
+Google > postgres download > postgres windows 64 bit > install >set your password > rest click next > untick stack builder n finish off.
+
+\? = for help
+q  = quit
+
+              
+              CONNECTING TO DB SERVER
+GUI CLIENT = PG ADMIN
+CLI = COMMAND LINE - SQL SHELL
+APPLICATION - SERVER SIDE 
+
+\l = lists the databases in your server
+
+               CREATE DATABASE & DELETE DATABASE
+CREATE DATABASE NAME;
+DROP DATABASE NAME;             - very dangerous command ,always have a backup
+
+
+              CONNECT TO DATABASE
+ \c NAME        |.   psql  -h localhost -p 5432 -u username - d database
+
+\d = describes the tables created in the databases (with sequence tables as well)
+\dt= only shows the data-tables 
+ 
+
+             Inorder to create table
+CREATE TABLE person(
+column_name + data type + constraints(if any)
+);
+              DELETE TABLE 
+DROP TABLE person;
+
+       eg-
+
+CREATE TABLE person(
+id int PRIMARY KEY,                              id,name,gender             = column_name  
+first_name  VARCHAR(50) NOT NULL,                here varchar               = data type
+last_name   VARCHAR(50) NOT NULL,                not null and primary key   = are called constraints
+gender      VARCHAR(8) NOT NULL,
+DATE_OFBIRTH DATE / TIMESTAMP NOT NULL,
+email VARCHAR(150) ,
+country VARCHAR(50) NOT NULL
+);
+
+        INSERT RECORD IN YOUR TABLE
+INSERT INTO person(id,first_name,last_name,gender,date_ofbirth,email,country) VALUES (1,'TUSHAR','MALHAN','MALE','2-3-1999','TUSHA@GMAIL,COM','INDIA');
+
+
+[you can use mockaroo website = to download 10000 records ]
+
+         COPY THE DOWNLOADED TABLE IN SQL SERVER
+\i file_location/file_name
+           constraints = refers to the set of rules that are implemented on the records in table
+PRIMARY KEY - WHICH UNIQUELY IDENTIFIES THE PERSON (ROW-) 
+UNIQUE- WHICH SET THE RECORDS UNIQUE AND EACH ONE SHOULD HAVE A UNIQUE VALUE
+DEFAULT-
+NOT NULL- MEANS ANY RECORD CANT BE SET EMPTY
+CHECK  - IT MAKE SURES ONLY PARTICULAR TYPE OF DATA CAN BE FILLED IN UR RECORD    
+
+            DATA TYPES
+BIGSERIAL - WHICH GIVES SEQUENCE TO UR TABLE RECORD
+TIMESTAMP - DATE/WITH HOURS
+MONEY     - SHOWS RECORD WITH MONEY $
+
+             TO EXPLORE THE RECORDS IN THE TABLE 
+SELECT * FROM person ;
+
+             EXPLORE PARTICULAR COLUMNS ONLY IN THE TABLE
+SELECT first_name,gender from person;
+ 
+             ORDER BY ASCENDING(ASC) /DESCENDING(DESC)
+SELECT country FROM person ORDER BY  country ASC; /DESC;
+
+             DISTINCT SEARCH ONLY
+SELECT DISTINCT country from person order by country;
+           
+             WHERE CLAUSE
+SELECT * FROM person WHERE id =1;
+         
+             AND CLAUSE - SEARCHES ONLY WHEN BOTH PARAMTERES MEET
+SELECT * FROM person WHERE id =1 AND country = 'india';
+
+             OR CLAUSE - SEARCHES both OF THEM
+SELECT * FROM person WHERE id =1 OR country = 'AUSTRAILIA';
+ 
+             LIMIT -SET LIMIT OF SEARCH
+SELECT * FROM person LIMIT 3;
+
+             OFFSET -REMOVE FIRST N NUMBER OF RECORD 
+SELECT * FROM person OFFSET 3;
+ 
+SELECT * FROM person OFFSET 5 LIMIT 3; =COMBO OF BOTH
+             
+              FETCH - (SAME AS LIMIT)=HERE U SPECIFY 
+SELECT * FROM person OFFSET 2 FETCH FIRST 1 ROW ONLY;
+  
+              IN & NOT CLAUSE- BE PARTICULAR ABOUT SELECTING RECORD
+SELECT * FROM person WHERE country IN ('CHINAI' ,'INDIA', 'Poland') ;
+SELECT * FROM person WHERE NOT first_name = 'TUSHAR' ;
+
+              between - find records in between 
+SELECT * FROM person WHERE date_ofbirth BETWEEN '2020-08-21' AND '2020-01-05' ;
+              
+              LIKE - WHERE IT MATCHES UR RECORD & ILIKE- HELPS NOT TO BE CASE SENSITIVE
+SELECT * FROM person WHERE COUNTRY LIKE 'INDIA' ;
+SELECT * FROM person WHERE COUNTRY ILIKE 'india' ;
+
+
+             wildcard in LIKE- % = which generally means anything 
+_a% = means 2 letter should start with letter a
+a%  = means  first letter should start with a
+%a  = means last letter should end with a
+(thus use them , as per your necessity)
+
+SELECT * FROM person WHERE COUNTRY LIKE 'I%' ;
+SELECT * FROM person WHERE COUNTRY LIKE '_%' ;
+SELECT * FROM person WHERE COUNTRY LIKE '___s%' ;
+
+
+            GROUP BY COLUMN-with same record
+SELECT country FROM person GROUP BY country ;
+            
+             COUNT - GIVES SPECIFIC COUNT OF EACH COLUMN -GROUP BY MUST BE USED INORDER TO GIVE THE COUNTS
+SELECT COUNT(country) FROM person GROUP BY country ;
+ 
+             HAVING BY COUNT - EXTRA FILTERS FOR COUNT
+SELECT COUNT(country) FROM person GROUP BY country HAVING COUNT(*) > 1 ;
+
+
+             BOTH GROUP BY AND ORDER BY & having >,<,= CLAUSE
+SELECT COUNT(country) from person GROUP BY country HAVING COUNT(*) >5 ORDER BY country  ;
+
+             MIN,MAX,AVG - CHECK RECORD WITH THIER OUTMOST VALUE
+SELECT MAX(date_ofbirth) FROM person ;
+SELECT MIN(date_ofbirth) FROM person ;
+SELECT ROUND(AVG(date_ofbirth)) FROM car ;
+SELECT SUM(price) FROM car;
+
+             do basic calculations =12
+SELECT 10+2;
+
+             alias = temporary rename your column name ,n see records
+SELECT * ,price AS original_price, ROUND AS ten_percent FROM car;
+
+             COALESCE =GIVES DEFAULT MESSAGE IF ANY VALUE IS NULL
+SELECT COALESCE(email,'email no')FROM person;
+
+             NULLIF- just to satisfy division method - so that it dont show error
+SELECT 10 / NULLIF (2,9); 
+[FOR 2 - it shows 5 , and for 9 it won't show any error]
+ 
+
+               TIMESTAMP - DATATYPE = GIVES HRS/MIN/SEC
+SELECT NOW();
+SELECT NOW() + INTERVAL '1YEAR','3 MONTHS','5 DAYS';- USE INTERVAL WITH +,- TO ADD OR SUBTRACT TIME FROM CURRENT
+               
+
+              USE SLICING - for checking only date
+SELECT NOW()::TIME/DATE
+
+
+               CHECK
+ALTER TABLE person ADD CONSTRAINT gender_chk  CHECK (gender ='Male' or gender = 'Female');
+
+
+               extarct= the timeperiodss 
+select extract (MONTH FROM NOW ());
+
+                age= get exact time
+SELECT gender,first_name,AGE(NOW(),date_ofbirth) from person;
+
+                PRIMARY KEYS-CONSTARINT= WHICH UNIQUELY IDENTIFIES ID,PERSON
+ALTER TABLE person ADD PRIMARY KEY(id);
+ALTER TABLE person DROP CONSTRAINT person_pkey;- TO DROP PK * DROP CONSTRAINT AS WELL 
+(use add /drop CONSTRAINTS TO GIVE NAME TO your CONSTRAINT)
+
+                ADD COLUMNS 
+ALTER TABLE person ADD gender VARCHAR(50); 
+
+[WHEN ALTER /DELETE/UPDATE TABLE - ALWAYS SPECIFY THE NAME OF THE TABLE & WHERE CLAUSE]
+
+IN - DELETE OR UPDATE FROM person where id =1
+WE ALWAYS USE WHERE = OTHERWISE ALL DATA WILL BE DELETED
+
+ALTER TABLE person ADD 	UNIQUE(id); - CREATE UNIQUE CONSTRAINT FOR THE id column
+
+sql commands-
+TCL (TRANSACTION CONTROL LANGUAGE)-INORDER TO SAVE OR EXPORT DATA          =  COMMIT , ROLLBACK,SAVEPOINT 
+DCL(DATA CONTROL LANGUAGE) - GIVES AUTHORITY ACCESS TO THE DATA            =  GRANT  , REVOKE
+DDL (DATA DEFINTION LANAGUAGE)- WHICH CHANGES THE TABLE                    =  ALTER  , DROP   , CREATE   , TRUNCATE
+DML (DATA MANIPULATION LANGUAGE)- WHICH CHANGES THE RECORDS IN TABLE       =  UPDATE , INSERT , DELETE thus mysql
+
+[DELETE HERE SAVES THE LOGS = FOR FUTURE BACKUP(ROLLBACK OCCURS HERE) , WHEREAS TRUNCATE-DELETES ALL RECORDS AT ONCE(ROLLBACK DON'T WORK)NO SAVE LOGS]
+        
+                           UPDATE TABLES
+UPDATE TABLE person  SET email= 'tusha@gmail.com', name='tushar', gender = 'Male' WHERE id=1;
+
+            ON CONFLICT - IF ANY CONFLCIT HAPPENS ,DO NOTHING OR SOMETHING
+INSERT INTO person (id,first_name,last_name,gender,date_ofbirth,email,country)VALUES(1,'TUSHAR','MALHAN','Male','2020-04-05','','usa') ON CONFLICT(id) DO NOTHING;
+here= it shows conflict of id(1)=id(1)- which is the primary key - thus we type
+ON CONFLICT(id) DO NOTHING,
+            UPSERT
+ON CONFLICT(id) DO UPDATE SET email = EXLCLUDED.email;
+(so whatever u provide the email with this insert command , it will be updated in the ORIGINAL RECORDS) , THUS USE = ON CONFLICT(id) UPDATE SET last_name =EXCLUDED.last_name)
+
+
+            FOREIGN KEYS - USED TO JOIN 2 TABLES VIA PRIMARY KEY AND SET THEM AS ONE, AS REFERENCED
+REMEMBER PRIMARY KEY (REFERENCED TABLE - CAR TABLE SHOULD BE COPIED FIRST)- THEN FOREIGN KEY (REFERENCING TABLE - PERSON WILL BE COPIED TO SERVER)
+FOR DELETION ITS vice-versa ie- first foreign key table
+
+create table car (
+        id BIGSERIAL NOT NUll PRIMARY KEY ,
+	make VARCHAR(50)NOT NUll,
+	model VARCHAR(50)NOT NUll,
+	price VARCHAR(50)NOT NUll
+);
+
+create table person (
+        id BIGSERIAL NOT NULL PRIMARY KEY,
+	first_name VARCHAR(50)NOT NUll,
+	last_name VARCHAR(50)NOT NUll,
+	gender VARCHAR(7)NOT NUll,
+	date_ofbirth DATENOT NUll,
+	email VARCHAR(50),
+	country VARCHAR(50)NOT NUll,
+        car_id BIGSERIAL REFERENCES car(id),
+        UNIQUE(car_id)
+);
+
+
+             UPDATE FOREIGN KEYS 
+UPDATE person SET car_id =2 WHERE id =1;
+(here with the reference of the foreignn key - the car & person table is one , so u can update the car_id(person) 2 from car(id) having=1 )
+
+            CHOOSE SPECIFIC COLUMNS FROM THE TABLE
+SELECT person.first_name,car.make,car.model FROM person; 
+
+
+             INNER JOINS = INORDER TO JOIN TABLES WHERE COMMON ATTRIBUTES MEET
+SELECT * FROM person JOIN car ON person.car_id = car.id;
+ (where person.car_id = FOREIGN KEY & car.id = PRIMARY KEY
+)
+             LEFT INNER JOIN = JOIN THE RECORD FROM LEFT TABLE-THAT DONT MEET ATTRIBUTE
+SELECT * FROM person LEFT JOIN car ON person.car_id = car.id
+
+SO JOINS IN NUTSHELL -
+
+INNER JOIN = SELECT * FROM PERSON JOIN CAR ON person.id=car.car_id;
+LEFT JOIN  = SELECT * FROM PERSON LEFT JOIN CAR ON person.id=car.car_id;
+SELF JOIN  = SELECT T1.S_ID FROM person as t1,person as t2 WHERE T1.S_ID=T2.S_ID AND T1.C_ID <> T2.C_ID
+(IT FIRST SEPERATE THE TABLE PERSON INTO 2(T1,T2) - NOW IT USE ALIAS
+WHERE it joins T1 table s_id (matches =) T2 table s_id       &
+AND (WHEN ITS NOT EQUAL TO<>) =  T1 TABLE OF C_ID<> T2 TABLE OF C_ID
+
+          CHECK SPECIFIC COLUMNS AND JOIN TABLES
+SELECT person.first_name,car.make,car.model FROM person JOIN car ON person.car_id=car.id;
+
+
+REMEMBER - INORDER TO DELETE FOREIGN KEY
+DELETE FOREIGN  KEY DATA FIRST 
+(DELETE from person WHERE id = 2;       deleting foreign key 
+DELETE FROM car WHERE    id  =13;)      now deleting the primary key
+
+
+             EXPORTING RESULTS TO CSV- TO UR FILE
+\copy (SELECT * FROM person LEFT JOIN car ON car.id=person.id) TO 'location/filename 'DELIMETER','CSV HEADER;
+
+             CHECK THE SEQUENCE THE DATA IS NUMBERED
+SELECT nextval ('person_id_seq'::regclass);
+= it gives all the LOG CALL being made
+
+              thus u can use alter SEQUENCE id_ WITH YOUR RESPECTIVE NUMBER
+ALTER SEQUENCE person_id_seq RESTART WITH 10;
+
+SELECT * FROM person person_id_seq;
+
+              UUID UNIVERSALLY UNIQUE IDENTIFIER -EXTENSION CREATED FROM FUNCTIONS =which give unique id -impossible to track
+SELECT * FROM pg_available_extensions;
+(= check extensions available)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; - extension will be created
+\df = shows lists of functions
+SELECT uuid_genarate_v4();       - here after select ,we type function name with version v4(), fucntion gets created
+
+use uuid as primary keys as DATA TYPE = as it difficult for hackers to know the id
+EG
+
+\x= expanded display turn on /off - inorder to know each value given
+
+CREATE TABLE car(
+      car_uid UUID  NOT NULL PRIMARY KEY,
+      model varchar(50),
+      make   varchar(50),
+      price money,
+);
+
+CREATE TABLE person;
+     person_uid UUID NOT NULL PRIMARY KEY,
+     date_of_birth DATE,
+     gender VARCHAR (7) NOT NULL,
+     country VARCHAR (50),
+     email VARCHAR(190),
+     last_name  VARCHAR(50) NOT NULL,
+     first_name VARCHAR(50) NOT NULL,
+     car_uid uuid REFERENCES car(car_uid),
+     UNIQUE(car_uid)
+
+);
+INSERT INTO person (person_uid,first_name,last_name,email,country,gender,date_of_birth)VALUES(uuid_generate_v4(),TUSHAR','MALHAN','tusha@gmail.com','india','male','1999-02-03') ;
+INSERT INTO car(car_uid,model,make,price) VALUES(uuid_generate_v4(),'hyundai','steel','$70,000')
+THIS WAY A UUID WILL BE GIVEN TO person's table id and car's table 
+
+
+
