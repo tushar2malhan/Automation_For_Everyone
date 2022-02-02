@@ -1,0 +1,10 @@
+[{"doctorid":1,"name_of_doc":"Sacha","specilization":"Avobenzone","location":"California","consultation_fees":831,"availability":true},
+{"doctorid":2,"name_of_doc":"Danita","specilization":"Amitriptyline ","location":"South Carolina","consultation_fees":863,"availability":false},
+{"doctorid":3,"name_of_doc":"Kania","specilization":"Calendula Officinalis ","location":"North Carolina","consultation_fees":825,"availability":false},
+{"doctorid":4,"name_of_doc":"Lauretta","specilization":"Phenylephrine","location":"Florida","consultation_fees":813,"availability":false},
+{"doctorid":5,"name_of_doc":"Dayle","specilization":"Tioconazole","location":"Utah","consultation_fees":867,"availability":true},
+{"doctorid":6,"name_of_doc":"Armin","specilization":"Insulin human","location":"Arkansas","consultation_fees":547,"availability":true},
+{"doctorid":7,"name_of_doc":"Tawnya","specilization":"ACETAMINOPHEN","location":"Missouri","consultation_fees":962,"availability":false},
+{"doctorid":8,"name_of_doc":"Trevar","specilization":"Bupropion Hydrochloride","location":"Louisiana","consultation_fees":781,"availability":true},
+{"doctorid":9,"name_of_doc":"Bill","specilization":"Corn Smut","location":"Florida","consultation_fees":730,"availability":true},
+{"doctorid":10,"name_of_doc":"Francine","specilization":"Candida albicans","location":"Georgia","consultation_fees":818,"availability":true}]

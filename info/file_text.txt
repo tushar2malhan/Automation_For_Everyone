@@ -1,0 +1,66 @@
+create dummies api if no api available
+
+appointmen if new
+1 day before  and 2 hour beore
+
+if completed 
+
+MYSQL_USER = 'admin'
+MYSQL_PASSWORD = 2K3dRBty
+MYSQL_HOST = 'cloudnext-db-instance-1.cdmedukox2nj.ap-south-1.rds.amazonaws.com'
+MYSQL_DB = 'morelights_version1'
+
+
+#               appointment typ
+{"bp": null, "other": null, "sugar": null, "amount": "200", 
+"height": null, "weight": null, 
+"message": "last reviewed by D-1177665522552567403", 
+"purpose": "new-visit", "reports": 0, "feedback": 0,
+ "completed": 1, "diagnosis": 0, "follow_up": 0, 
+"slot_time": "08:00", "new_status": 1, "paid_status": "paid", "temperature": null, 
+"pre_check_up": 0, "prescription": 1, "diagnosis_type": "", "follow_up_used": 0, 
+"reports_viewed": 0, "doctor_comments": null, "mode_of_payment": "cash", "consultation_type": "walkin", "last_visited_date": "", "parent_appointment_id": null}
+
+#                   prescription_type
+
+{"diet": "", "amount": "10", "message": "last reviewed by EMP-1989985080783053450", 
+"follow_up": "", "paid_status": "pending", 
+"prescription": [{"days": "11", "name": "phani", "size": "S", "evening": 0, "morning": 1, 
+                 "discount": 0.0, "quantity": "1", "afternoon": 1, "color_code": "white",
+                  "sold_price": 0.0, "description": "", "actual_price": 0.0}, 
+                  {"days": "5", "name": "phanindra", "size": "S", "evening": 1, 
+                 "morning": 1, "discount": 0.0, "quantity": "2", "afternoon": 1,
+                 "color_code": "white", "sold_price": 0.0, "description": "", "actual_price": 0.0},
+                 {"days": "2", "name": "Adderall", "size": "S", "evening": 0, "morning": 1, 
+                 "discount": 10.0, "quantity": "2", "afternoon": 1, "color_code": "white", 
+                 "sold_price": 8.0, "description": "", "actual_price": 18.0}], 
+"mode_of_payment": "online", "consultation_note": " ", 
+"prescription_type": null, "prescription_status": "Being prepared",
+"prescription_reviewer": "EMP-1989985080783053450"}
+
+
+days = no of tablets  # get max days,take prescription seperately
+json table ? 
+save procedure locally
+
+
+# 24 hour period
+"slot_time":  app
+app date      app
+appointment status app
+follow up
+
+# self.cursor.execute(f"select id, appointment_id from {self.list_of_tables[23]}")
+          # app = self.cursor.fetchone()
+          # print(app)
+
+
+new
+
+
+
+
+enrollment = all data of all member types (even hospital)
+appointment == all appointments of everyone 
+master_pharmancy = ava of all branche
+

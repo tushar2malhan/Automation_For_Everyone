@@ -1,0 +1,55 @@
+func as param in stored procedure
+split the code
+
+if rows_count > 0:
+     rs = cursor.fetchall()
+else:
+     // handle empty result set
+
+CURSORS functions()
+THESE ARE THE ONLY WAYS OF EXTRACTION
+fetchall()                       ||| it needs to be run inorder to do the rowcount
+fetchone()
+fetchmany(n)
+executemany(sql_statement, data)  # inserts batch data
+for result in cursor.execute(operation, multi=True):
+  if result.with_rows:
+insert_stmt = (
+  "INSERT INTO employees (emp_no, first_name, last_name, hire_date) "
+  "VALUES (%s, %s, %s, %s)"
+)
+data = (2, 'Jane', 'Doe', datetime.date(2012, 3, 23))
+cursor.execute(insert_stmt, data)
+
+select_stmt = "SELECT * FROM employees WHERE emp_no = %(emp_no)s"
+cursor.execute(select_stmt, { 'emp_no': 2 })
+
+
+
+cursor object attributes
+rowcount                      ||   confirms with fetchmany . we need to extract it to do rowcount
+column_names
+statement   > displays the query
+ ``	  # print(self.cursor.column_names)
+          # print(self.cursor.rowcount)
+          # print(self.cursor.statement)
+          # print(self.cursor.fetchall()[0])
+          # print(self.cursor.fetchmany(1))
+          # print(self.cursor.fetchone())
+
+  # show the meesage to user , describe user message  ( dont print in console)          defined in send_message
+ 
+
+ # print(each_row[0],each_row[1],slot_time,each_row[3],each_row[4])
+
+
+false == '' , []  , {}, 0,None
+true == ," ",-1,1,[4],{4:4},True
+
+
+idiot check each query for store procedure and normal query 
+
+ORDER OF SEQUENCE
+stored_results
+fetchall()
+then row count 
