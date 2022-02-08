@@ -1,11 +1,6 @@
 <img src="https://64.media.tumblr.com/5e3f04be8b71bc34e2f156bb552ed766/tumblr_inline_nsmntnrLTK1r42jqv_540.gifv" width="600" height="400">
 
 
-# Database_Theory 
-- SQL database server
-- NoSQL Database server 
-- Summary
-- Postgres
 
 
 # Whatsapp automation
@@ -15,8 +10,16 @@
 - whatsapp messenger and automatic receiver whatsapp bot
 - Send Voice message , txt message and image message to bulk users
 
+
 # Info & Images
-- Sub-directory of Whatsapp automation
+- Sub-directory of Whatsapp automation BACKUP
+
+
+# Database_Theory 
+- SQL database server
+- NoSQL Database server 
+- Summary
+- Postgres
 
 
 # Fast_API-AWS
