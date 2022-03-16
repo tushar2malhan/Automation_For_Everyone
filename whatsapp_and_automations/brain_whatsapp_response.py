@@ -12,14 +12,14 @@ from time import sleep
 
 
 pt.FAILSAFE = True
-JSON_FILE = 'whatsapp_automation\MOCK_DATA.json'
+JSON_FILE = 'whatsapp_and_automations\MOCK_DATA.json'
 mouse  = Controller()
 DOCTORS_ID, date_set_by_user, confirmation_of_user, name_specialization_location, time_period_of_appointment, name_of_doc, days_tablets_required = None,None, None,'', '', '', ''
 BASE_COMMAND = 'Please select the Doctor first  by typing the doctor id who is available the appointment'
 
 CONTACT_NUMBER_OF_PHARMACY, MESSAGE_TO_PHARMACY = '', ''
 
-JSON_FILE2 = 'whatsapp_automation\presciptions_MOCK_DATA.json'
+JSON_FILE2 = 'whatsapp_and_automations\presciptions_MOCK_DATA.json'
 COLUMN_CHECKED = 'RemindMe'
 
 try:

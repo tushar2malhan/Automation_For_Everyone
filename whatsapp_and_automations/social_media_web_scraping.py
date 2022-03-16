@@ -7,20 +7,58 @@ import credentials
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 
+option = Options()
 
+option.add_argument("--disable-infobars")
+option.add_argument("start-maximized")
+option.add_argument("--disable-extensions")
+
+# REMOVE POP UP NOTIFICATIONS 
+option.add_experimental_option("prefs", { 
+    "profile.default_content_setting_values.notifications": 1 
+})
 
 u_input = input("Which Social Media account  would you require information for ?: \n\n\
    \t Instagram \t Facebook \t Twitter \t Linkedin \n").lower().strip()
+
 linkedin_email = credentials.all_credentials['linked_email']
 linkedin_password = credentials.all_credentials.get('linked_password')
-# data = {}
+
 
 def user_information(username):
-    """ Display user information from
-    their social media accounts """
-    driver = webdriver.Chrome(executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
-    try:
+
+    
+        """ Display user information from
+        their social media accounts """
+   
+        driver = webdriver.Chrome(
+        chrome_options=option,executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
+      
+        def block_page():
+                ' WANNA Block any page ? - For only facebook Pages '
+                time.sleep(5)
+                driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[3]/div/div/div/div[2]/div/div/div[3]/div/div/div[1]').click()
+                time.sleep(2)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[7]/div[2]/div/div/span').click()
+                except:driver.find_element(By.CSS_SELECTOR,'.qzhwtbm6.knvmm38d').click()
+                time.sleep(2)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                except:driver.find_element(By.CSS_SELECTOR,'.qzhwtbm6.knvmm38d').click()
+                time.sleep(2)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                time.sleep(2)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
+                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span').click()
+                time.sleep(2)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
+                except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div').click()
+                time.sleep(5)
+
+    # try:
         if u_input.startswith('i'):
             print('Instagram\n')
             url = f"https://www.instagram.com/{username}/"
@@ -54,7 +92,7 @@ def user_information(username):
         
         elif u_input.startswith('f'):
             print('Facebook\n')
-            wait = WebDriverWait(driver, 10)
+        
             url = f"https://www.facebook.com/"
             driver.get(url)
             
@@ -63,24 +101,36 @@ def user_information(username):
                  xlink:href  is the attribute of the image we want from FB 
                  IF U DONT FIND UR USERNAME HERE , TRY USING name.sername
                  name = driver.title """
-            """ LOGIN FIRST """
-
-            driver.find_element(By.ID,'email').send_keys(credentials.all_credentials['fb_email'])
-            driver.find_element(By.ID,'pass').send_keys(credentials.all_credentials['fb_password'])
-            try:
-                driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('_42ft _4jy0 _6lth _4jy6 _4jy1 selected _51sy'.split(' '))).click()
-            except:driver.find_element(By.ID,'u_0_d_Mc').click()
            
-            time.sleep(10)
-            try:
-                pyautogui.click(pyautogui.locateOnScreen(r'C:\Users\Tushar\Desktop\cloud_next\images\allow_blue.png',confidence = .8))
-                time.sleep(1)
-                pyautogui.click(pyautogui.locateOnScreen(r'C:\Users\Tushar\Desktop\cloud_next\images\fb_white.png',confidence = .8))
-                time.sleep(1)
-                url_2 = f"https://www.facebook.com/{username}/"
-                pyautogui.write(url_2)
-            except :print('Stay on the Page else I cant write the url')
-            pyautogui.press('enter')
+            """ LOGGED IN FIRST """
+            # login button
+            time.sleep(5)
+            try:driver.find_element(By.XPATH,('/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[2]/div/div/div/div[2]/div/div[1]/div/a/div/div[1]')).click()
+            except: ...
+            driver.find_element(By.ID,'email').send_keys(credentials.all_credentials['fb_email'])
+            driver.find_element(By.ID,'pass').send_keys(credentials.all_credentials['fb_password']+Keys.ENTER)
+            
+            try:driver.find_element(By.CLASS_NAME,'_6ltg').click()
+            except:print('cant click on login but still logged in ')
+
+            
+            
+            ''' SEATCH BOX FOR USERNAMES '''
+            # time.sleep(10)
+            # search_box = driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div/label/input')
+            # search_box.click()
+            # search_box.send_keys(username)
+            # search_box.send_keys(Keys.RETURN)
+            
+
+            # NOW LOGEGD IN WITH USERNAME SUCCESSFULLY
+            url = f"https://www.facebook.com/{username}"
+            driver.get(url)
+
+            ''' Blocking the page '''
+            while 1:
+                block_page()
+
             name = driver.title         # .split('Facebook')[0].split('|')[0]
             time.sleep(10)
 
@@ -113,8 +163,8 @@ def user_information(username):
                     # profile hidden , cant do anything
                     followers = 'Hidden'
                     print('Profile is locked\nCant show friends as profile is Locked OR Profile is Public ,\n You need to make them friend first')
-                
 
+          
         elif u_input.startswith('t'):
             """
             SO u wanna get element having multiple classes ? 
@@ -169,22 +219,22 @@ def user_information(username):
             print(f'Username is \t\t',name,end='\n\n')
             print(f'Profile pic URL is \t',profile_pic,end='\n\n')
             print(f'Total Followers are \t\t',followers,end='\n\n')
-            # data[f'name_of_{username}'] = name
-            # data[f'profile_pic_of_{username}'] = profile_pic
+         
         except:
             print('\tCant return name and profile URL')
+      
     
-        driver.close()
+        # driver.close()
         return name
     
-    except :
-        driver.close()
-        print(f'{username}\t Check The Username Again\n ')
-        return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
+    # except :
+    #     driver.close()
+    #     print(f'{username}\t Check The Username Again\n ')
+    #     return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
 names = [ 
-        'tusharmalhan',
+        # 'tusharmalhan',
         # 'vindiesel',
         # 'rahul.vij.127',
         # 'ok',

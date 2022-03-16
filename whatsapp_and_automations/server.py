@@ -16,7 +16,7 @@ def whatsapp_automation(number, message_type, message, image_file=None):
     if not number.startswith('+91'):
         number = '+91'+ number
     message_type = message_type.lower()
-    if message_type in ('text','txt','message','msg'):
+    if message_type in ('text','txt','message','msg','t'):
         pywhatkit.sendwhatmsg_instantly(number, message,10)
     else:
         if image_file is not None:
@@ -39,10 +39,8 @@ def whatsapp_automation(number, message_type, message, image_file=None):
     return message_type
 
 if __name__ == "__main__":
-    print(whatsapp_automation('7814891872','image',
-    'Hey cloudnext client 👋 Thank you for being our valued customer. \
-     We will be happy to notify you. For your queries  and\
-     we Hope  met your expectations.',r'images\image.jpeg'))
+    # print(whatsapp_automation('7814891872','txt',
+    # 'Hey sir  👋 How are you.'))
     ...
 
     time.sleep(3)
@@ -67,3 +65,4 @@ if __name__ == "__main__":
             print('No new message...\n')
         time.sleep(10)
                                              
+
