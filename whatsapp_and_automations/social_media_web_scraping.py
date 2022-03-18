@@ -1,6 +1,5 @@
 import time
 import sys 
-import json
 import pyautogui
 from selenium import webdriver
 import credentials 
@@ -40,20 +39,32 @@ def user_information(username):
         def block_page():
                 ' WANNA Block any page ? - For only facebook Pages '
                 time.sleep(5)
+                #               3 button click
                 driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[3]/div/div/div/div[2]/div/div/div[3]/div/div/div[1]').click()
                 time.sleep(2)
+                print('clicked 3 button')
+                #                  Report Page
                 try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[7]/div[2]/div/div/span').click()
-                except:driver.find_element(By.CSS_SELECTOR,'.qzhwtbm6.knvmm38d').click()
+                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[6]/div[2]/div/div/span').click()
+                print(2)
+                print('Report Page')
                 time.sleep(2)
+                #                  Fake Page
                 try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
-                except:driver.find_element(By.CSS_SELECTOR,'.qzhwtbm6.knvmm38d').click()
+                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[6]/div/div/div/div[1]/div').click()
+                print(3)
+                print('Fake Page')
                 time.sleep(2)
+                #                  
                 try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
                 except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                print(4)
                 time.sleep(2)
                 try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
                 except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span').click()
                 time.sleep(2)
+                print(5)
+                print('DONE ')
                 try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
                 except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div').click()
                 time.sleep(5)
@@ -128,8 +139,12 @@ def user_information(username):
             driver.get(url)
 
             ''' Blocking the page '''
+            
             while 1:
-                block_page()
+                try:block_page() if u_input.startswith('f') else 'break'
+                except:block_page() if u_input.startswith('f') else 'break'
+   
+
 
             name = driver.title         # .split('Facebook')[0].split('|')[0]
             time.sleep(10)
@@ -225,10 +240,10 @@ def user_information(username):
       
     
         # driver.close()
+        driver.close()
         return name
     
     # except :
-    #     driver.close()
     #     print(f'{username}\t Check The Username Again\n ')
     #     return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
