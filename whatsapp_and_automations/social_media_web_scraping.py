@@ -31,14 +31,13 @@ linkedin_password = credentials.all_credentials.get('linked_password')
 def user_information(username):
 
     
-        """ Display user information from
-        their social media accounts """
+    """ Display user information from
+    their social media accounts """
    
-        driver = webdriver.Chrome(
-        chrome_options=option,executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
-       
-      
-        def block_page():
+    driver = webdriver.Chrome(
+    chrome_options=option,executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
+    
+    def block_page():
             ' WANNA Block any page ? - For only facebook Pages '
             
             #               3 button Option
@@ -105,8 +104,9 @@ def user_information(username):
                 driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span"))))
             except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div').click()
             time.sleep(2)
+       
 
-    # try:
+    try:
         if u_input.startswith('i'):
             print('Instagram\n')
             url = f"https://www.instagram.com/{username}/"
@@ -284,12 +284,12 @@ def user_information(username):
         driver.close()
         return name
     
-    # except :
-    #     print(f'{username}\t Check The Username Again\n ')
-    #     return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
+    except :
+        print(f'{username}\t Check The Username Again\n ')
+        return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
-names = [ 'Hardeepak-Malhan-a-big-fraud-108886130994869'
+names = [ 
         # 'tusharmalhan',
         # 'vindiesel',
         # 'rahul.vij.127',
