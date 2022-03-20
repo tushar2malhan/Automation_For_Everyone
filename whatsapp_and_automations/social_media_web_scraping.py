@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 option = Options()
 
@@ -35,39 +36,75 @@ def user_information(username):
    
         driver = webdriver.Chrome(
         chrome_options=option,executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
+       
       
         def block_page():
-                ' WANNA Block any page ? - For only facebook Pages '
-                time.sleep(5)
-                #               3 button click
-                driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[3]/div/div/div/div[2]/div/div/div[3]/div/div/div[1]').click()
-                time.sleep(2)
-                print('clicked 3 button')
-                #                  Report Page
-                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[7]/div[2]/div/div/span').click()
-                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[6]/div[2]/div/div/span').click()
-                print(2)
+            ' WANNA Block any page ? - For only facebook Pages '
+            
+            #               3 button Option
+            ''' Since element is not interactable, we use driver.execute_script() to click the button '''
+            print()
+            print(1)
+            try:
+                print('Clicked 3 button Options')
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[3]/div/div/div/div[2]/div/div/div[3]/div/div/div[1]"))))
+            except Exception as e:
+                print(e)
+                ...
+                print('1 not respond')
+            time.sleep(2)
+
+          
+            #                  Report Page     :->     As page will be not be clickable sometimes , we start with 1 step from except Block !
+            print(2)
+            try:
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[6]/div[2]/div/div/span"))))
                 print('Report Page')
-                time.sleep(2)
-                #                  Fake Page
-                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
-                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[6]/div/div/div/div[1]/div').click()
-                print(3)
+            except Exception as e:
+                print('try to click  2 button again with 1 button ')
+                WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[3]/div/div/div/div[2]/div/div/div[3]/div/div/div[1]'))).click()
+                WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div/div[1]/div/div/div/div[1]/div/div[6]/div[2]/div/div/span'))).click()
+                print('\n\n ',e)
+            time.sleep(2)
+          
+          
+            #                  Fake Page
+            print(3)
+            try:
+                # driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span"))))
                 print('Fake Page')
-                time.sleep(2)
-                #                  
-                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
-                except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
-                print(4)
-                time.sleep(2)
-                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
-                except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span').click()
-                time.sleep(2)
-                print(5)
+            except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[3]/div/div[2]/div/div/div[6]/div/div/div/div[1]/div').click()
+            time.sleep(2)
+           
+           
+            #               Something Suspecious          
+            try:
+                print('Called Suspecious Button ')
+                # driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/span"))))
+            except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/div[1]/div/div/div/div/span').click()
+            time.sleep(2)
+           
+           
+            #               Submit
+            print(4)
+            try:
+                print('Submitted')
+                # driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span"))))
+            except:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span').click()
+            time.sleep(2)
+            
+            
+            #               Done
+            print(5)
+            try:
                 print('DONE ')
-                try:driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
-                except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div').click()
-                time.sleep(5)
+                # driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span').click()
+                driver.execute_script("arguments[0].click();", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div/div[1]/div/span/span"))))
+            except: driver.find_element(By.XPATH,'/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/div[2]/div/div/div/div').click()
+            time.sleep(2)
 
     # try:
         if u_input.startswith('i'):
@@ -76,8 +113,6 @@ def user_information(username):
             driver.get(url)
             name = driver.title
             try:
-                # here u copy the classname of the element and then search it by driver
-                # remember u want text or get_attribute('src') == image
                 name = driver.find_element(By.CLASS_NAME,'XBGH5').text
             except:
                 name = driver.find_element(By.XPATH ,'//*[@id="react-root"]/section/main/div/header/section/div[1]/h2').text
@@ -122,7 +157,7 @@ def user_information(username):
             driver.find_element(By.ID,'pass').send_keys(credentials.all_credentials['fb_password']+Keys.ENTER)
             
             try:driver.find_element(By.CLASS_NAME,'_6ltg').click()
-            except:print('cant click on login but still logged in ')
+            except:print(' logged in ')
 
             
             
@@ -139,10 +174,18 @@ def user_information(username):
             driver.get(url)
 
             ''' Blocking the page '''
-            
-            while 1:
-                try:block_page() if u_input.startswith('f') else 'break'
-                except:block_page() if u_input.startswith('f') else 'break'
+            driver.minimize_window()
+            def recursive_attack_on_a_page():
+                try:
+                    while 1:
+                        try:block_page() if u_input.startswith('f') else 'break'
+                        except:block_page() 
+                except:
+                    while 1:
+                        try:block_page() if u_input.startswith('f') else 'break'
+                        except:block_page() 
+            try:recursive_attack_on_a_page()
+            except:recursive_attack_on_a_page()
    
 
 
@@ -238,8 +281,6 @@ def user_information(username):
         except:
             print('\tCant return name and profile URL')
       
-    
-        # driver.close()
         driver.close()
         return name
     
@@ -248,7 +289,7 @@ def user_information(username):
     #     return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
-names = [ 
+names = [ 'Hardeepak-Malhan-a-big-fraud-108886130994869'
         # 'tusharmalhan',
         # 'vindiesel',
         # 'rahul.vij.127',
