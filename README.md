@@ -35,6 +35,11 @@
 - encrypt decrypt data with JWT
 - fast api with jwt
 
+# automation 
+- includes finding new builds
+- marking attendance 
+- vpn connection
+
 # To measure Your Python Code 
 ```
 pip install pylint

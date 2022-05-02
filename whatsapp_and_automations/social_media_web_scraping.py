@@ -2,7 +2,7 @@ import time
 import sys 
 import pyautogui
 from selenium import webdriver
-import credentials 
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,9 +24,12 @@ option.add_experimental_option("prefs", {
 u_input = input("Which Social Media account  would you require information for ?: \n\n\
    \t Instagram \t Facebook \t Twitter \t Linkedin \n").lower().strip()
 
-linkedin_email = credentials.all_credentials['linked_email']
-linkedin_password = credentials.all_credentials.get('linked_password')
-
+linkedin_email = "credentials.all_credentials['linked_email']"
+linkedin_password = "credentials.all_credentials.get('linked_password')"
+fb_email = "credentials.all_credentials['fb_email']"
+fb_password = "credentials.all_credentials['fb_password']"
+insta_email = 'tusharmalhan'
+insta_password  = 'Tushar@21'
 
 def user_information(username):
 
@@ -35,7 +38,7 @@ def user_information(username):
     their social media accounts """
    
     driver = webdriver.Chrome(
-    chrome_options=option,executable_path=r"C:\Users\Tushar\Downloads\chromedriver.exe")
+    chrome_options=option,executable_path=r"C:\Users\tushar.m\Downloads\chromedriver.exe")
     
     def block_page():
             ' WANNA Block any page ? - For only facebook Pages '
@@ -109,26 +112,44 @@ def user_information(username):
     try:
         if u_input.startswith('i'):
             print('Instagram\n')
+            url = f"https://www.instagram.com/accounts/login/?next=%2F&source=logged_out_half_sheet"
+            driver.get(url)
+            time.sleep(5)
+            try:
+                driver.find_element(By.NAME,'username').send_keys(insta_email)
+                driver.find_element(By.NAME,'password').send_keys(insta_password+Keys.ENTER)
+                try:driver.find_element(By.XPATH,'/html/body/div[1]/section/main/div/div/div[1]/div[2]/form/div/div[3]/button/div').click()
+                except: ...
+                print('Logged In Successfully to Instagram')
+            except: print("Cant login to instagram ")
+            time.sleep(10)
+            name = driver.title
+
             url = f"https://www.instagram.com/{username}/"
             driver.get(url)
-            name = driver.title
+            time.sleep(3)
             try:
                 name = driver.find_element(By.CLASS_NAME,'XBGH5').text
             except:
-                name = driver.find_element(By.XPATH ,'//*[@id="react-root"]/section/main/div/header/section/div[1]/h2').text
-                name = driver.find_element(By.CLASS_NAME,'_2s25').text
+                # name = driver.find_element(By.CSS_SELECTOR ,'._7UhW9.fKFbl.yUEEX.KV-D4.fDxYl').text
+                # name = driver.find_element(By.CLASS_NAME,'_2s25').text
+                print('No name \n\n')
+ 
             try:
-                profile_pic = driver.find_element(By.CLASS_NAME, "be6sR").get_attribute('src')
+                image = driver.find_element(By.XPATH,'//img[@class="_6q-tv"]')
             except:
-                profile_pic =driver.find_element(By.CLASS_NAME, "_6q-tv").get_attribute('src')
+                image = driver.find_element(By.XPATH,'//img[@class="be6sR"]')
+        
+            profile_pic = image.get_attribute('src')
+
             try:
                 total_posts = driver.find_element(By.CLASS_NAME, "g47SY").text
             except:
                 print('Couldnt fetch the total posts of the User from Instagram')
             try:
-                followers = driver.find_element(By.CLASS_NAME, "_81NM2").text
+                brief = driver.find_element(By.CLASS_NAME, "k9GMp ").text
             except:
-                followers = driver.find_element(By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a').text
+                brief = driver.find_element(By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a').text
             # data[f'total_posts_of_{username}'] = total_posts
             # data[f'followers_of_{username}'] = followers
             
@@ -153,8 +174,8 @@ def user_information(username):
             time.sleep(5)
             try:driver.find_element(By.XPATH,('/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[2]/div/div/div/div[2]/div/div[1]/div/a/div/div[1]')).click()
             except: ...
-            driver.find_element(By.ID,'email').send_keys(credentials.all_credentials['fb_email'])
-            driver.find_element(By.ID,'pass').send_keys(credentials.all_credentials['fb_password']+Keys.ENTER)
+            driver.find_element(By.ID,'email').send_keys(fb_email)
+            driver.find_element(By.ID,'pass').send_keys(fb_password+Keys.ENTER)
             
             try:driver.find_element(By.CLASS_NAME,'_6ltg').click()
             except:print(' logged in ')
@@ -273,24 +294,29 @@ def user_information(username):
             time.sleep(50)
         
         else:sys.exit("Invalid input")
-        try:
-            print(f'Username is \t\t',name,end='\n\n')
-            print(f'Profile pic URL is \t',profile_pic,end='\n\n')
-            print(f'Total Followers are \t\t',followers,end='\n\n')
+        # try:
+        print(f'Username is \t\t',name,end='\n\n')      
+        print(f'Profile pic URL is \t',profile_pic,end='\n\n')
+        # print(f'Total Followers are \t\t\n',followers,end='\n\n') if followers is not None  else print('No Followers')
+        print(f'In Brief \t\t\n',brief,end='\n\n')  
          
-        except:
-            print('\tCant return name and profile URL')
+        # except:
+        #     print(f'\tCant return name and profile URL of {username}')
+
+        # driver.get(profile_pic)
+        # time.sleep(15)
       
         driver.close()
         return name
     
-    except :
+    except Exception as e :
         print(f'{username}\t Check The Username Again\n ')
+        print('\n\t',e)
         return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
 names = [ 
-        # 'tusharmalhan',
+        'tusharmalhan',
         # 'vindiesel',
         # 'rahul.vij.127',
         # 'ok',
@@ -301,6 +327,7 @@ names = [
         # 'virat.kohli',
         # 'ronaldo','iamsrk',
         # 'rahul_vij','egg', 'Tushar79958956',
+        'dars02'
         ]
 [user_information(name) for name in names]
 
