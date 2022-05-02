@@ -13,6 +13,7 @@ from selenium.common.exceptions import WebDriverException
 from credentials import all_credentials as credentials
 from selenium.common.exceptions import WebDriverException
 from vpn_connect import Connect
+path_to_chromedriver = r"C:\Users\Tushar\Downloads\chromedriver.exe"
 
 def send_notification(head,msg,d=3,img=None):
     # pip install win10toast
@@ -39,7 +40,7 @@ class main():
        
         url = 'https://buildbox.lab.nbttech.com/train/14995/'
         chrome_options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(executable_path=r"C:\Users\tushar.m\Downloads\chromedriver.exe",chrome_options=chrome_options)
+        driver = webdriver.Chrome(executable_path=path_to_chromedriver ,chrome_options=chrome_options)
         driver.get(url)
         driver.minimize_window()
         ''' LOGIN '''

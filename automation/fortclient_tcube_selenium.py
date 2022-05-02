@@ -13,8 +13,9 @@ TCUBE_URL = 'https://tcube.thinkpalm.info/user/projectlist'
 # DOWNLOAD YOUR CHROME DRIVER FROM: https://chromedriver.chromium.org/downloads    
 # Check Your chrome Version from > chrome > settings > Help > About chrome
 # DRIVER_PATH = 'C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe' YOUR PATH HERE
+path_to_chromedriver = r"C:\Users\Tushar\Downloads\chromedriver.exe"
 
-driver = webdriver.Chrome(executable_path=r"C:\Users\tushar.m\Downloads\chromedriver.exe")
+driver = webdriver.Chrome(executable_path=path_to_chromedriver)
 
 # Just provide Your Credentials Here 
 think_palm_username = credentials.all_credentials.get('think_palm_username')  # 'tushar'

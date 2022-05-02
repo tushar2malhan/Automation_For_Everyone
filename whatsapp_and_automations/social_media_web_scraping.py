@@ -30,15 +30,14 @@ fb_email = "credentials.all_credentials['fb_email']"
 fb_password = "credentials.all_credentials['fb_password']"
 insta_email = 'tusharmalhan'
 insta_password  = 'Tushar@21'
+path_to_chromedriver = r"C:\Users\Tushar\Downloads\chromedriver.exe"
 
 def user_information(username):
 
-    
     """ Display user information from
     their social media accounts """
    
-    driver = webdriver.Chrome(
-    chrome_options=option,executable_path=r"C:\Users\tushar.m\Downloads\chromedriver.exe")
+    driver = webdriver.Chrome( chrome_options=option,executable_path=f"{path_to_chromedriver}"  )
     
     def block_page():
             ' WANNA Block any page ? - For only facebook Pages '
