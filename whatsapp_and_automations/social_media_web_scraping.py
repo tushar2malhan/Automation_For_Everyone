@@ -2,6 +2,7 @@ import time
 import sys 
 import pyautogui
 from selenium import webdriver
+import credentials
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -24,12 +25,13 @@ option.add_experimental_option("prefs", {
 u_input = input("Which Social Media account  would you require information for ?: \n\n\
    \t Instagram \t Facebook \t Twitter \t Linkedin \n").lower().strip()
 
-linkedin_email = "credentials.all_credentials['linked_email']"
-linkedin_password = "credentials.all_credentials.get('linked_password')"
-fb_email = "credentials.all_credentials['fb_email']"
-fb_password = "credentials.all_credentials['fb_password']"
-insta_email = 'tusharmalhan'
-insta_password  = 'Tushar@21'
+linkedin_email = credentials.all_credentials['linked_email']
+linkedin_password = credentials.all_credentials.get('linked_password')
+fb_email = credentials.all_credentials['fb_email']
+fb_password = credentials.all_credentials['fb_password']
+insta_email = credentials.all_credentials['insta_email']
+insta_password = credentials.all_credentials['insta_password']
+
 path_to_chromedriver = r"C:\Users\Tushar\Downloads\chromedriver.exe"
 
 def user_information(username):
@@ -193,7 +195,7 @@ def user_information(username):
             url = f"https://www.facebook.com/{username}"
             driver.get(url)
 
-            ''' Blocking the page '''
+            ''' Blocking the page 
             driver.minimize_window()
             def recursive_attack_on_a_page():
                 try:
@@ -204,43 +206,46 @@ def user_information(username):
                     while 1:
                         try:block_page() if u_input.startswith('f') else 'break'
                         except:block_page() 
-            try:recursive_attack_on_a_page()
-            except:recursive_attack_on_a_page()
+            # try:recursive_attack_on_a_page()
+            # except:recursive_attack_on_a_page()
+            '''
    
 
-
-            name = driver.title         # .split('Facebook')[0].split('|')[0]
-            time.sleep(10)
-
-            profile_pic = [i.get_attribute('xlink:href') for i in driver.find_elements(By.TAG_NAME,"image")]
-            time.sleep(2)
-            if profile_pic == []:
-                profile_pic = driver.find_element(By.CLASS_NAME,'_2dgj').get_attribute('href')
-               
             try:
-                # this for a PAGE in fb, u get number of followers from the page
-                followers_of_page =[i.text for i in driver.find_elements_by_css_selector('.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh jq4qci2q a3bd9o3v b1v8xokw oo9gr5id'.split(' '))) if i.text.endswith('like this')]
-                if followers_of_page :
-                    print('Total followers of page are ',''.join(   followers_of_page     ))
-                    followers = followers_of_page[0].split(' ')[0]
-                else:
-                    # this for a General User whose profile is not locked in fb, u get number of followers from the page
-                    print('\n Not a Page')
-                    followers =  driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh e9vueds3 j5wam9gi b1v8xokw m9osqain'.split(' ')) ).text                                     
-                    if followers.isdigit():
-                        int(followers)
-                        print("General User\n")
+                name = driver.title         # .split('Facebook')[0].split('|')[0]
+                time.sleep(10)
+
+                profile_pic = [i.get_attribute('xlink:href') for i in driver.find_elements(By.TAG_NAME,"image")]
+                time.sleep(2)
+                if profile_pic == []:
+                    profile_pic = driver.find_element(By.CLASS_NAME,'_2dgj').get_attribute('href')
+                
+                try:
+                    # this for a PAGE in fb, u get number of followers from the page
+                    followers_of_page =[i.text for i in driver.find_elements_by_css_selector('.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh jq4qci2q a3bd9o3v b1v8xokw oo9gr5id'.split(' '))) if i.text.endswith('like this')]
+                    if followers_of_page :
+                        print('Total followers of page are ',''.join(   followers_of_page     ))
+                        followers = followers_of_page[0].split(' ')[0]
                     else:
-                        raise Exception
+                        # this for a General User whose profile is not locked in fb, u get number of followers from the page
+                        print('\n Not a Page')
+                        followers =  driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh e9vueds3 j5wam9gi b1v8xokw m9osqain'.split(' ')) ).text                                     
+                        if followers.isdigit():
+                            int(followers)
+                            print("General User\n")
+                        else:
+                            raise Exception
+                except:
+                    # this for a CELEBS PAGE, u get number of followers from the page
+                    followers = driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p'.split(' '))).text
+                    if followers.split(' ')[0].split('M')[0].isdigit():
+                        print("\n\t But Its a Celebs Page \n ")
+                    else:
+                        # profile hidden , cant do anything
+                        followers = 'Hidden'
+                        print('Profile is locked\nCant show friends as profile is Locked OR Profile is Public ,\n You need to make them friend first')
             except:
-                # this for a CELEBS PAGE, u get number of followers from the page
-                followers = driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p'.split(' '))).text
-                if followers.split(' ')[0].split('M')[0].isdigit():
-                    print("\n\t But Its a Celebs Page \n ")
-                else:
-                    # profile hidden , cant do anything
-                    followers = 'Hidden'
-                    print('Profile is locked\nCant show friends as profile is Locked OR Profile is Public ,\n You need to make them friend first')
+                    print('Page does not exist')
 
           
         elif u_input.startswith('t'):
@@ -271,33 +276,43 @@ def user_information(username):
             """ here we have to signin first and
             then click on url to search the name in the linkedin """
             print('Linkedin\n')
-            # url = f"https://www.linkedin.com/"   
-            url = f'https://www.linkedin.com/in/{username}/' 
+            url = f"https://www.linkedin.com/login"   
             driver.get(url)
-            time.sleep(5)
-            driver.find_element(By.CSS_SELECTOR,'.authwall-join-form__form-toggle--bottom.form-toggle').click()
+            time.sleep(8)
             
-            time.sleep(3)
-            driver.find_element(By.ID,'session_key').send_keys(linkedin_email)
-            driver.find_element(By.ID,'session_password').send_keys(linkedin_password)
-            driver.find_element(By.CLASS_NAME,'sign-in-form__submit-button').click()
+            driver.find_element(By.ID,'username').send_keys(linkedin_email)
+            driver.find_element(By.ID,'password').send_keys(linkedin_password+Keys.ENTER)
+     
             time.sleep(10)
-            pyautogui.click(pyautogui.locateOnScreen(r'C:\Users\Tushar\Desktop\cloud_next\images\linkedin_in_url_white.png',confidence = .8))
-            pyautogui.write(url)
-            pyautogui.press('enter')
-            time.sleep(15)
+            # pyautogui.click(pyautogui.locateOnScreen(r'C:\Users\Tushar\Desktop\cloud_next\images\linkedin_in_url_white.png',confidence = .8))
+            # pyautogui.write(url)
+            # pyautogui.press('enter')
+            url = f'https://www.linkedin.com/in/{username}/?_l=en_US' 
+            driver.get(url)
+            time.sleep(10)
             followers = driver.find_element(By.CLASS_NAME,'t-bold').text
             name = driver.find_element(By.CLASS_NAME,'pv-text-details__left-panel').text
             profile_pic = driver.find_element(By.ID,'ember33').get_attribute('src')
-            # data[f'followers_of_{username}'] = followers
-            time.sleep(50)
+            if profile_pic is None:
+                profile_pic = driver.find_element(By.ID,'ember38').get_attribute('src')
+            ul = driver.find_elements(By.CLASS_NAME,'pvs-list__outer-container')
+            all_li = ul.find_elements_by_tag_name("li")
+            brief = []
+            for li in all_li:
+                text = li.text
+                print (text)
+                brief.append(text)
+
         
         else:sys.exit("Invalid input")
         # try:
-        print(f'Username is \t\t',name,end='\n\n')      
+        try:print(f'Username is \t\t',name,end='\n\n')      
+        except: print('Cant show name here ')
         print(f'Profile pic URL is \t',profile_pic,end='\n\n')
-        # print(f'Total Followers are \t\t\n',followers,end='\n\n') if followers is not None  else print('No Followers')
-        print(f'In Brief \t\t\n',brief,end='\n\n')  
+        try:        print(f'Total Followers are \t\t\n',followers,end='\n\n') if followers is not None  else print('No Followers')
+        except : print(' ❌ Followers ')
+        try:print(f'In Brief \t\t\n',brief,end='\n\n')  
+        except: print("Not gonna brief here")
          
         # except:
         #     print(f'\tCant return name and profile URL of {username}')
@@ -310,7 +325,7 @@ def user_information(username):
     
     except Exception as e :
         print(f'{username}\t Check The Username Again\n ')
-        print('\n\t',e)
+        # print('\n\t',e)
         return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
@@ -324,9 +339,11 @@ names = [
         # 'ktrtrs',
         # 'bajaj',
         # 'virat.kohli',
-        # 'ronaldo','iamsrk',
+        'ronaldo',
+        # 'iamsrk',
         # 'rahul_vij','egg', 'Tushar79958956',
-        'dars02'
+        'natasha'
+
         ]
 [user_information(name) for name in names]
 
