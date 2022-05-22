@@ -179,7 +179,7 @@ def user_information(username):
             driver.find_element(By.ID,'pass').send_keys(fb_password+Keys.ENTER)
             
             try:driver.find_element(By.CLASS_NAME,'_6ltg').click()
-            except:print(' logged in ')
+            except:print('Logged in \n')
 
             
             
@@ -211,41 +211,15 @@ def user_information(username):
             '''
    
 
-            try:
-                name = driver.title         # .split('Facebook')[0].split('|')[0]
-                time.sleep(10)
+            
+            name = driver.title         # .split('Facebook')[0].split('|')[0]
+            time.sleep(10)
 
-                profile_pic = [i.get_attribute('xlink:href') for i in driver.find_elements(By.TAG_NAME,"image")]
-                time.sleep(2)
-                if profile_pic == []:
-                    profile_pic = driver.find_element(By.CLASS_NAME,'_2dgj').get_attribute('href')
-                
-                try:
-                    # this for a PAGE in fb, u get number of followers from the page
-                    followers_of_page =[i.text for i in driver.find_elements_by_css_selector('.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh jq4qci2q a3bd9o3v b1v8xokw oo9gr5id'.split(' '))) if i.text.endswith('like this')]
-                    if followers_of_page :
-                        print('Total followers of page are ',''.join(   followers_of_page     ))
-                        followers = followers_of_page[0].split(' ')[0]
-                    else:
-                        # this for a General User whose profile is not locked in fb, u get number of followers from the page
-                        print('\n Not a Page')
-                        followers =  driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh e9vueds3 j5wam9gi b1v8xokw m9osqain'.split(' ')) ).text                                     
-                        if followers.isdigit():
-                            int(followers)
-                            print("General User\n")
-                        else:
-                            raise Exception
-                except:
-                    # this for a CELEBS PAGE, u get number of followers from the page
-                    followers = driver.find_element(By.CSS_SELECTOR,'.'+'.'.join('oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p'.split(' '))).text
-                    if followers.split(' ')[0].split('M')[0].isdigit():
-                        print("\n\t But Its a Celebs Page \n ")
-                    else:
-                        # profile hidden , cant do anything
-                        followers = 'Hidden'
-                        print('Profile is locked\nCant show friends as profile is Locked OR Profile is Public ,\n You need to make them friend first')
-            except:
-                    print('Page does not exist')
+            profile_pic = [i.get_attribute('xlink:href') for i in driver.find_elements(By.TAG_NAME,"image")][1:3]
+            try:followers = driver.find_element(By.CSS_SELECTOR,'.'+ '.'.join('oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 m9osqain lrazzd5p'.split(' '))  ).text
+            except: followers = 'Cant Access Followers'
+            # brief = driver.find_element(By.CSS_SELECTOR,'.'+ '.'.join('dati1w0a tu1s4ah4 f7vcsfb0 discj3wi'.split(' '))) .text
+
 
           
         elif u_input.startswith('t'):
@@ -260,21 +234,21 @@ def user_information(username):
             url = f"https://www.twitter.com/{username}/"
             driver.get(url)
             time.sleep(7)
-            followers_class_name = '.'+ '.'.join('css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0'.split(' '))  
-            total_words_list = [total_followers.text for total_followers in driver.find_elements_by_css_selector(followers_class_name)]
+            followers_class_name = '.'+ '.'.join('css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0'.split(' '))    
+            total_words_list = [total_followers.text for total_followers in driver.find_elements(By.CSS_SELECTOR,followers_class_name)]
             time.sleep(5)
             followers =' '.join([ total_words_list[i-1] for i,word in enumerate(total_words_list) if word == 'Followers'])
-            name = total_words_list[10] if not '' else total_words_list[11]
-
+            name = driver.find_element(By.CSS_SELECTOR,'.'+ '.'.join('css-1dbjc4n r-6gpygo r-14gqq1x'.split(' '))).text
             if name is  None or name == '':
                 print('\nCan fetch the name\n')
             time.sleep(5)
             profile_pic = driver.find_element(By.CLASS_NAME,'css-9pa8cd').get_attribute('src')
-            # data[f'followers_of_{username}'] = followers
+            brief = [driver.find_element(By.CLASS_NAME,'css-1dbjc4n').text]
 
         elif u_input.startswith('l'):
             """ here we have to signin first and
-            then click on url to search the name in the linkedin """
+            then click on url to search the name in the linkedin
+            Finding only indian users  """
             print('Linkedin\n')
             url = f"https://www.linkedin.com/login"   
             driver.get(url)
@@ -283,7 +257,6 @@ def user_information(username):
             driver.find_element(By.ID,'username').send_keys(linkedin_email)
             driver.find_element(By.ID,'password').send_keys(linkedin_password+Keys.ENTER)
      
-            time.sleep(10)
             # pyautogui.click(pyautogui.locateOnScreen(r'C:\Users\Tushar\Desktop\cloud_next\images\linkedin_in_url_white.png',confidence = .8))
             # pyautogui.write(url)
             # pyautogui.press('enter')
@@ -296,53 +269,48 @@ def user_information(username):
             if profile_pic is None:
                 profile_pic = driver.find_element(By.ID,'ember38').get_attribute('src')
             ul = driver.find_elements(By.CLASS_NAME,'pvs-list__outer-container')
-            all_li = ul.find_elements_by_tag_name("li")
             brief = []
-            for li in all_li:
-                text = li.text
-                print (text)
+            
+            for each_li in ul:
+                text =  each_li.find_element(By.TAG_NAME,'li').text
+                # print (text)
                 brief.append(text)
 
         
         else:sys.exit("Invalid input")
-        # try:
-        try:print(f'Username is \t\t',name,end='\n\n')      
-        except: print('Cant show name here ')
-        print(f'Profile pic URL is \t',profile_pic,end='\n\n')
-        try:        print(f'Total Followers are \t\t\n',followers,end='\n\n') if followers is not None  else print('No Followers')
+
+        try:print(f'\n\nUsername is \t\t',name,end='\n\n')      
+        except: print('❌ name  ')
+        try:print(f'Profile pic URL is \t',profile_pic,end='\n\n')
+        except: print(' ❌ Profile Pic ')
+        try: print(f'Total Followers are \t\t\n',followers,end='\n\n') if followers is not None  else print('No Followers')
         except : print(' ❌ Followers ')
         try:print(f'In Brief \t\t\n',brief,end='\n\n')  
-        except: print("Not gonna brief here")
-         
-        # except:
-        #     print(f'\tCant return name and profile URL of {username}')
-
-        # driver.get(profile_pic)
-        # time.sleep(15)
+        except: print("❌ Brief here ")
       
         driver.close()
         return name
     
     except Exception as e :
-        print(f'{username}\t Check The Username Again\n ')
-        # print('\n\t',e)
+        print(f'{username}\t\n Check The Username Again\n ')
+        print('\n\t',e)
         return(f'\n\n Issue with User named -> {username} for getting the information for {u_input}')
 
 
 names = [ 
-        'tusharmalhan',
-        # 'vindiesel',
+        # 'samridhi',
+        # 'jimmymalhanf'
+        # 'thejohnabram
         # 'rahul.vij.127',
         # 'ok',
-        # 'tusharmalhan','iamsrk',
-        # 'cristiano',
+        # 'tusharmalhan',
+        # 'iamsrk',
+        'cristiano',
         # 'ktrtrs',
         # 'bajaj',
         # 'virat.kohli',
-        'ronaldo',
-        # 'iamsrk',
+        # 'ronaldo',
         # 'rahul_vij','egg', 'Tushar79958956',
-        'natasha'
 
         ]
 [user_information(name) for name in names]
