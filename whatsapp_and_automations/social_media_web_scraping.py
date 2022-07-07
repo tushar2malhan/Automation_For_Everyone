@@ -1,3 +1,4 @@
+import imp
 import time
 import sys 
 import pyautogui
@@ -39,7 +40,10 @@ def user_information(username):
     """ Display user information from
     their social media accounts """
    
-    driver = webdriver.Chrome( chrome_options=option,executable_path=f"{path_to_chromedriver}"  )
+    # driver = webdriver.Chrome( chrome_options=option,executable_path=f"{path_to_chromedriver}"  )
+    driver = webdriver.Remote( 
+    command_executor='http://localhost:4444/wd/hub',
+     )
     
     def block_page():
             ' WANNA Block any page ? - For only facebook Pages '
@@ -124,38 +128,47 @@ def user_information(username):
                 print('Logged In Successfully to Instagram')
             except: print("Cant login to instagram ")
             time.sleep(10)
-            name = driver.title
+            total_posts = ''
 
             url = f"https://www.instagram.com/{username}/"
             driver.get(url)
             time.sleep(3)
-            try:
-                name = driver.find_element(By.CLASS_NAME,'XBGH5').text
-            except:
-                # name = driver.find_element(By.CSS_SELECTOR ,'._7UhW9.fKFbl.yUEEX.KV-D4.fDxYl').text
-                # name = driver.find_element(By.CLASS_NAME,'_2s25').text
-                print('No name \n\n')
+            # try:
+            #     name = driver.find_element(By.CLASS_NAME,'XBGH5').text
+            # except:
+            #     # name = driver.find_element(By.CSS_SELECTOR ,'._7UhW9.fKFbl.yUEEX.KV-D4.fDxYl').text
+            #     # name = driver.find_element(By.CLASS_NAME,'_2s25').text
+            #     name = name 
  
             try:
                 image = driver.find_element(By.XPATH,'//img[@class="_6q-tv"]')
             except:
-                image = driver.find_element(By.XPATH,'//img[@class="be6sR"]')
+                try:
+                    image = driver.find_element(By.XPATH,'//img[@class="be6sR"]')
+                except:
+                    image =  driver.find_element(By.CLASS_NAME,'_aa8j')
         
             profile_pic = image.get_attribute('src')
 
             try:
-                total_posts = driver.find_element(By.CLASS_NAME, "g47SY").text
+                total_posts += driver.find_element(By.CLASS_NAME, "g47SY").text
             except:
-                print('Couldnt fetch the total posts of the User from Instagram')
+                total_posts += driver.find_element(By.CLASS_NAME, "_aa_5").text
+
             try:
                 brief = driver.find_element(By.CLASS_NAME, "k9GMp ").text
             except:
-                brief = driver.find_element(By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a').text
+                try:
+                    brief = driver.find_element(By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a').text
+                except:
+                    brief = driver.find_element(By.CLASS_NAME,'_aa_7').text.replace('\n','  \\ ')
+     
             # data[f'total_posts_of_{username}'] = total_posts
             # data[f'followers_of_{username}'] = followers
             
             # print(f'Profile pic URL is \t',profile_pic,end='\n\n')
-            print(f'Total posts are \t',total_posts,end='\n\n')
+            name = driver.title
+            print(f'\nTotal posts are \t',total_posts,end='\n\n')
            
         
         elif u_input.startswith('f'):
@@ -220,8 +233,6 @@ def user_information(username):
             except: followers = 'Cant Access Followers'
             # brief = driver.find_element(By.CSS_SELECTOR,'.'+ '.'.join('dati1w0a tu1s4ah4 f7vcsfb0 discj3wi'.split(' '))) .text
 
-
-          
         elif u_input.startswith('t'):
             """
             SO u wanna get element having multiple classes ? 
@@ -304,7 +315,7 @@ names = [
         # 'rahul.vij.127',
         # 'ok',
         # 'tusharmalhan',
-        # 'iamsrk',
+        'iamsrk',
         'cristiano',
         # 'ktrtrs',
         # 'bajaj',
