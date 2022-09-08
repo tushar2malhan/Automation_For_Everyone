@@ -39,8 +39,8 @@ def whatsapp_automation(number, message_type, message, image_file=None):
     return message_type
 
 if __name__ == "__main__":
-    # print(whatsapp_automation('7814891872','txt',
-    # 'Hey sir  👋 How are you.'))
+    print(whatsapp_automation('7814891872','txt',
+    'Hey   👋 How are you.'))
     ...
 
     time.sleep(3)
