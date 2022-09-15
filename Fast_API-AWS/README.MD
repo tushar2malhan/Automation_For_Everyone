@@ -85,5 +85,4 @@ zip -g ../function.zip -r app/
 
 # Video link 
 * For any issue 
-- Check Screenshot Directory or
-- https://www.youtube.com/watch?v=6fE31084Uks
+- Check Screenshot Directory 
