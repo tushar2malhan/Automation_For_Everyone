@@ -83,6 +83,5 @@ zip -g ../function.zip -r app/
 - Under API Actions - click Deploy API  and set the stage by just giving a name
 - FINALLY YOU CAN TEST THE API with the url shown
 
-# Video link 
-* For any issue 
+## For any issue 
 - Check Screenshot Directory 
