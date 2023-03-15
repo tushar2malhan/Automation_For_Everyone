@@ -1,4 +1,3 @@
-from gtts import gTTS
 from os import getenv
 from server import whatsapp_automation
 
