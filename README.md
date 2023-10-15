@@ -1,4 +1,4 @@
-# Job branch includes `<br><br>`
+# Job branch includes
 
 ![HackerHackerManGIF](https://user-images.githubusercontent.com/66706496/152695203-a83b61cd-9c57-4188-bb06-82f80e0cbc52.gif)
 `<br>`
@@ -12,4 +12,4 @@
   `ls -a`
 
 
-* [ ] **Run the branch** `<br>`
+* [ ] **Run the branch**
