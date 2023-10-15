@@ -1,0 +1,8 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+Scrum Master,Previse Solutions Llc,Applied Successfully,Not Disclosed,"320 Thaxton St Gaithersburg, MD 20878 , Other USA, USA",No URL,,,
+,,,,,,1. What is the notice period in your current company ?*,select-one,less than 15 days
+,,,,,,2. How many years of experience do you have in scrum ? ,radio,0 - 2
+,,,,,,3. What is your expected annual CTC in INR ? ,text,"Based on market standards, open to negotiate"
+,,,,,,4. Are you familiar with Salesforce Development process and associated details?*,text,yes
+,,,,,,5. What is your Current CTC*,text,24
+,,,,,,6. How many years of experience do you have in agile methodology ? ,radio,0 - 2

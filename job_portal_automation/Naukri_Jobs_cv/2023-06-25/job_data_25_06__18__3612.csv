@@ -1,0 +1,7 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+Manager Finance Analytics (Tableau Developer with Finance Exp.),Support Star Corporate,Applied Successfully,5-14 Lacs P.A.,,No URL,,,
+,,,,,,1. How much is your experience working with Tableau on Financial Planning & Analysis*,text,3
+,,,,,,2. Which of the below mentioned financial work you have experience on *,checkbox,"['Month End Reporting activities: - Reviewing financials', 'Performance & Analysis - Prepare dashboards', 'Quarterly & Yearly Activities Budgeting and Forecast Process -']"
+,,,,,,3. Are you comfortable working in 4 PM - 1 AM Shift (Work from Home)*,text,yes
+,,,,,,4. How much is your current & Expected CTC*,text,"Based on market standards, open to negotiate"
+,,,,,,5. How much is your notice period*,text,"Based on market standards, open to negotiate"

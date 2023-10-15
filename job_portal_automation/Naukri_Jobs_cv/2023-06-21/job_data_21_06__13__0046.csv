@@ -1,0 +1,4 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+Biostatistician,Excelra,Applied Successfully,10-20 Lacs P.A.,,No URL,,,
+,,,,,,1. do you have pre clinical or early stage exp?*,checkbox,['yes']
+,,,,,,2. do you have hands on R / PYTHON ?*,radio,YES

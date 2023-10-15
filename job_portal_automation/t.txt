@@ -1,0 +1,12 @@
+make them case sensitive by including [translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
+
+
+it should contain the word,
+
+find that it in button or span 
+
+
+ driver.find_elements(By.XPATH, "//a[contains(translate(text(),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'SUBMIT')] | //button[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'SUBMIT')]")
+
+
+    import pdb;pdb.set_trace()

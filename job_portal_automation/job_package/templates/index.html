@@ -1,0 +1,109 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Portal Automation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .content {
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 32px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            height: 25px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .contact-info {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .contact-info a {
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Job Portal Automation</h1>
+    </div>
+
+    <div class="content">
+        <h1>Job Portal Automation</h1>
+        <form method="POST" action="/">
+            {% for field in info_fields %}
+            <label>{{ field }}:</label>
+            <input type="text" name="my_info_{{ field|replace(' ', '_') }}"><br>
+            {% endfor %}
+            
+            {% for field in other_fields %}
+            <label>{{ field }}:</label>
+            <input type="text" name="other_{{ field|replace(' ', '_') }}"><br>
+            {% endfor %}
+            
+            <input type="submit" value="Save">
+        </form>
+    </div>
+    <div class="footer">
+        <p>Contact: tusharmalhan@gmail.com | Phone: 7814891872</p>
+        <p>&copy; Tushar Malhan 2023</p>
+    </div>
+</body>
+</html>

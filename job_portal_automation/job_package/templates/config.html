@@ -1,0 +1,103 @@
+<!-- config.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Portal Automation - Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .content {
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 32px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        ul li span {
+            font-weight: bold;
+        }
+
+        .contact-info {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .contact-info a {
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Job Portal Automation - Configuration</h1>
+    </div>
+    <div class="content">
+        <h1>Configurations Saved </h1>
+        <h2>My Info</h2>
+        <ul>
+            {% for key, value in my_info.items() %}
+            <li><span>{{ key }}:</span> {{ value }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Other</h2>
+        <ul>
+            {% for key, value in other.items() %}
+            <li><span>{{ key }}:</span> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="footer">
+        <p>Contact: tusharmalhan@gmail.com | Phone: 7814891872</p>
+        <p>&copy; Tushar Malhan 2023</p>
+    </div>
+</body>
+</html>

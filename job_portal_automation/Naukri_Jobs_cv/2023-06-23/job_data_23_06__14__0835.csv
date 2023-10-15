@@ -1,0 +1,6 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+,,,,,,1. How many years of experience do you have in c#.net ?*,text,3
+,,,,,,2. What is your expected annual CTC in INR ?*,text,"Based on market standards, open to negotiate"
+,,,,,,3. How many days of notice period do you have in your current company?*,text,Can join on Immediate basis
+,,,,,,"4. Do you have experience in any one of the scripting language, python/Bash/Groovy/poweshell/Ruby?*",text,3
+job_title,company_name,Apply manually on company's portal,  Not Disclosed by Recruiter ,No Recruiters Details Found,"https://www.naukri.com/myapply/saveApply?strJobsarr=230623004824&applytype=single&resId=176533908&ApplyMode=1&logstr=other-microsite&id=&src=&reqId=&response=&questData=&multiApplyResp={%22230623004824%22:200}&https_apply=&jquery=1&edup=&applySrc=&isMobile=&actualDomain=apply.naukri.com&interest=&https_apply=&cb=&fb=&appreqid=&ip=118.91.176.208&webApp=&jobTitle=Software%20Engineer-%20C#.Net,%20Powershell/Gr",,,

@@ -1,0 +1,18 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+Associate Analytics - Data,Ensemble health partner,Applied Successfully,Not Disclosed,,No URL,,,
+,,,,,,1. How many years of experience do you have in Spark?*,text,3
+,,,,,,2. How many years of experience do you have in Python?*,text,3
+,,,,,,3. How many years of experience do you have in SQL?*,text,3
+,,,,,,4. How many years of experience do you have in AI/ML? ,text,3
+AI Speech Systems Developer / Conversational AI Developer,Cynapto,Applied Successfully,10-20 Lacs P.A.,,No URL,,,
+Performance Test Engineer,Paxcom India,Applied Successfully,8.5-12 Lacs P.A.,"Plot No- 412-415, 7th Floor, Nimai Tower, Phase IV, Udyog Vihar, Gurugram, Haryana 122015
+https://paxcom.ai/",No URL,,,
+,,,,,,1. What is the notice period in your current company ? ,select-one,1 month
+,,,,,,2. How many years of experience do you have in shell scripting ? ,radio,2 - 3
+,,,,,,3. How many years of experience do you have in jmeter ? ,radio,2 - 3
+,,,,,,"4. Are you currently living in or ready to relocate to Gurgaon/ Gurugram, Haryana ? ",radio,yes
+,,,,,,5. What is your expected annual CTC in INR ? ,radio,"Rs.1,200,000.00 - Rs.1,550,000.00"
+Deep Learning Scientist/ Applied Scientist (Neural Rendering/Vision),Cynapto,Applied Successfully,10-20 Lacs P.A.,,No URL,,,
+,,,,,,"1. Are you currently living in or ready to relocate to Mumbai, Maharashtra ?*",radio,yes
+ReactJS Engineer - WFH,Finoit Technologies,Applied Successfully,Not Disclosed,https://www.finoit.com/,No URL,,,
+Gcp Data Engineer,Saven Nova Technologies,Applied Successfully,Not Disclosed,MNC,No URL,,,

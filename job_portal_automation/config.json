@@ -1,0 +1,23 @@
+{
+
+    "job_links_classname":"styles_middle-section-container__iteRZ",
+    "all_job_classname": "srp-jobtuple-wrapper",
+    "job_title": {
+        "class_name": "jd-header-title",
+        "class_name_variation_2": "styles_jd-header-title__rZwM1",
+        
+        "company_name_raw": "jd-header-comp-name",
+        "company_variation_2": "styles_jd-header-comp-name__MvqAI",
+
+        "salary_classname":"salary",
+        "salary_classname_variation_2": "styles_jhc__salary__jdfEC",
+
+
+        "apply_btn_classname":"apply-button",
+        "apply_btn_cssname_variation_2":".styles_apply-button__uJI3A.apply-button"
+
+
+    }
+}
+  
+  

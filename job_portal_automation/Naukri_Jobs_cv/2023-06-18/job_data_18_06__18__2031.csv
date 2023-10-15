@@ -1,0 +1,11 @@
+Job Title,Company Name,Status,CTC,Recruiters Details,URL,question_text,input type,user input text
+Sales Development Representative,,Not Applying because of keyword mentioned sales,,,No URL,,,
+Blockchain Developer,Japanmarketingllc,Applied Successfully,10-12 Lacs P.A.,,No URL,,,
+Senior Software Engineer,Ensemble Health Partner,Applied Successfully,Not Disclosed,,No URL,,,
+,,,,,,1. How many years of experience do you have in typescript?*,text,3
+,,,,,,2. Do you have an good understanding of Data Structure & Algorithm.*,text,yes
+,,,,,,3. How many Years of experience you have in building REST API?*,text,3
+,,,,,,4. Do you have an experience in building CI-CD pipelines?*,text,3
+,,,,,,5. How many years of experience in building & hosting applications in any of the cloud providers. *,text,3
+,,,,,,6. How many years of experience you have using SQL and NoSQL databases.*,text,3
+,,,,,,"7. Experience in at-least one strongly typed language such as C#, TypeScript*",text,3
