@@ -16,10 +16,10 @@
   `ls -a`</br>
 
 * [ ] **Push the changes to this branch**</br>
-  `git push -u origin HEAD:job_`</br>
+  `git push -u origin HEAD:job_`</br></br>
 
 
-* [ ] **One-liner**</br></br>
+* [ ] **One-liner**</br>
   `git add .;git commit -m "Modified changes"; git push -u origin HEAD:job_`</br>
 
 * [ ] **Make Sure to Run the repo inside job_portal_automation Directory**</br>
