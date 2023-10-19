@@ -5,11 +5,15 @@
 
 **Job automation Script ( New Branch job_ )** 
 
+* Clone the Repo
+`git clone git@github.com:tushar2malhan/Automation_For_Everyone.git`
+
+
 * [ ] **Fetch all the branches** 
   `git fetch --all`
-  `git branch -a `
+  `git branch -a `  
   `git checkout <new_branch_name>`
   `ls -a`
 
 
-* [ ] **Run the branch**
+* [ ] **Make Sure to Run the repo inside job_portal_automation Directory**
