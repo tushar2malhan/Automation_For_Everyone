@@ -1544,7 +1544,7 @@ def manual_intervention():
         search_box.send_keys(website)
         search_box.send_keys(Keys.ENTER)
         url = None
-
+        time.sleep(2)
         # Click the first search result
         first_result = driver.find_element(By.CSS_SELECTOR, 'div.tF2Cxc')
 
@@ -1580,9 +1580,9 @@ def manual_intervention():
 
 if __name__ == "__main__":
 
-    manual_intervention()
+    # manual_intervention()
 
-    # read and modify the variables from the config file
+    ### read and modify the variables from the config file
     with open('job_portal_automation/config.json', 'r') as config_file:
         config_data = json.load(config_file)
 
@@ -1594,7 +1594,7 @@ if __name__ == "__main__":
     else:
         print('\nLogged in Successfully to Naukri Portal \n')
 
-    # naukri_portal(experience, job_titles, location, job_age, exclude_keywords)
+    naukri_portal(experience, job_titles, location, job_age, exclude_keywords)
 
 
 

@@ -129,7 +129,7 @@ def login_portal():
     
 
     username = "tusharmalhan@gmail.com"
-    password = "tusharmalhan@21"
+    password = ""
 
 
     sleep(2)
