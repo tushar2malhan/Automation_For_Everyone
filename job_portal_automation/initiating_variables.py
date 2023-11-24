@@ -26,13 +26,20 @@ my_info = dict(config.items("my_info"))
 question_mappings = {
     "experience": experience,
     "first": my_info.get               ("First", my_info.get("first", "")),
+    "given": my_info.get               ("First", my_info.get("first", "")),
+    "local given Name": my_info.get    ("First", my_info.get("first", "")),  
     "last": my_info.get                ("Last", my_info.get("last", "")),
+    "family": my_info.get              ("Last", my_info.get("family", "")),
+    "full": my_info.get                ("FullName", my_info.get("first", "") +' '+ my_info.get('last')),
+    "full name": my_info.get           ("FullName", my_info.get("first", "") +' '+ my_info.get('last')),
+    'extension':my_info.get            ('Extension', '+91' ),
     'email': my_info.get               ("Email", my_info.get("email", "tusharmalhan@gmail.com")),
     'gmail': my_info.get               ("Email", my_info.get("email", "tusharmalhan@gmail.com")),
     'mail': my_info.get                ("Email", my_info.get("email", "tusharmalhan@gmail.com")),
     'password': my_info.get            ("Password", my_info.get("password", "Test@123")),
     'credentials': my_info.get         ("Password", my_info.get("password", "Test@123")),
-    'Verify New Password': my_info.get ("Password", my_info.get("password", "Test@123")),
+    'verify New Password': my_info.get ("Password", my_info.get("password", "Test@123")),
+    'verify': my_info.get              ("Password", my_info.get("Password", "Test@123")),
     "number": my_info.get              ("Number", my_info.get("number", "")),
     "phone": my_info.get               ("Number", my_info.get("number", "")),
     "contact": my_info.get             ("Number", my_info.get("number", "")),
@@ -45,14 +52,14 @@ question_mappings = {
     "current location": my_info.get    ("City", my_info.get("city", "")),
     "state": my_info.get               ("State", my_info.get("state", "")),
     "postal": my_info.get              ("Postal", my_info.get("postal", "")),
+    "zip": my_info.get                 ("Postal", my_info.get("zip", "")),
     "expected annual": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected salary": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected ctc": my_info.get        ("ECTC", my_info.get("ectc", "")),
     "salary expectation": my_info.get  ("ECTC", my_info.get("ectc", "")),
-    "join": my_info.get                ("notice_period", my_info.get("Notice Period", "")),
     "languages": my_info.get           ("languages", my_info.get("Languages", "")),
     "languages": my_info.get           ("languages", my_info.get("Languages", "")),
-    "job change": my_info.get          ("job_change_reason", my_info.get("Job Change Reason", "")),
+    "job change": my_info.get          ("Job_change_reason", my_info.get("Job Change Reason", "")),
     "current ctc": my_info.get         ("CTC", my_info.get("ctc", "")),
     "current annual ctc": my_info.get  ("CTC", my_info.get("ctc", "")),
     "current ctc": my_info.get         ("CTC", my_info.get("ctc", "")),
@@ -61,18 +68,21 @@ question_mappings = {
     "expected salary": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected ctc": my_info.get        ("ECTC", my_info.get("ectc", "")),
     "salary expectation": my_info.get  ("ECTC", my_info.get("ectc", "")),
-    "notice period": my_info.get       ("notice_period", my_info.get("Notice Period", "")),
-    "join": my_info.get                ("notice_period", my_info.get("Notice Period", "")),
-    "when can you start": my_info.get  ("notice_period", my_info.get("Notice Period", "")),
-    "when can you start": my_info.get  ("notice_period", my_info.get("Notice Period", "")),
-    "university": my_info.get          ("university", my_info.get("University", "")),
-    "school": my_info.get              ("university", my_info.get("School", "")),
-    "institute": my_info.get           ("university", my_info.get("Institute", "")),
-    "university": my_info.get          ("university", my_info.get("University", "")),
-    "school": my_info.get              ("university", my_info.get("School", "")),
-    "institute": my_info.get           ("university", my_info.get("Institute", "")),
-    'LinkedIn':my_info.get             ('LinkedIn Profile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
-    'linkedIn':my_info.get             ('LinkedIn Profile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
+    "join": my_info.get                ("Notice_period", my_info.get("Notice Period", "")),
+    "notice period": my_info.get       ("Notice_period", my_info.get("Notice Period", "")),
+    "join": my_info.get                ("Notice_period", my_info.get("Notice Period", "")),
+    "when can you start": my_info.get  ("Notice_period", my_info.get("Notice Period", "")),
+    "when can you start": my_info.get  ("Notice_period", my_info.get("Notice Period", "")),
+    "university": my_info.get          ("University", my_info.get("university", "")),
+    "school": my_info.get              ("University", my_info.get("university", "")),
+    "institute": my_info.get           ("University", my_info.get("university", "")),
+    "university": my_info.get          ("University", my_info.get("university", "")),
+    "school": my_info.get              ("University", my_info.get("university", "")),
+    "institute": my_info.get           ("University", my_info.get("university", "")),
+    "pan": my_info.get                 ("PAN", my_info.get("Institute", "")),
+    "nationality": my_info.get         ("Nationality", 'Indian'),
+    'LinkedIn':my_info.get             ('LinkedInProfile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
+    'linkedIn':my_info.get             ('LinkedInProfile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
     'github':my_info.get               ('Github','https://github.com/tushar2malhan'),
     'website':my_info.get              ('Github','https://github.com/tushar2malhan'),
     'gender':                          ("Male"),
@@ -106,6 +116,8 @@ DownloadLocation = str(os.path.join(Path.home(), "Documents\\"))
 CredentialsLocation = str(os.path.join(Path.home(), 'Desktop\\Automation_For_Everyone'))
 import sys
 sys.path.append(CredentialsLocation)
+from credentials import username, password
+username_ = username; password_ = password
 resume_file_path = DownloadLocation+"Tushar's Resume.pdf"
 service = Service()
 options = webdriver.ChromeOptions()
@@ -136,8 +148,8 @@ def login_portal():
     accept_cookies()
     
     ### Supply in your credentials
-    username = username   
-    password = password 
+    username = username_   
+    password = password_
 
 
     sleep(2)
@@ -297,14 +309,14 @@ def chatbot_questionnaire():
                 chat_bot_class_questions = driver.find_element(By.CLASS_NAME, 'chatbot_DrawerContentWrapper').find_element(By.TAG_NAME, 'ul').find_elements(By.TAG_NAME,'li')
             except:
                 print("\nNo more Chat bot questions need to be answered ")
-                break
+                return True
             for question in chat_bot_class_questions:
                 question_text = question.text
                 try:
                     chat_bot_class_questions = driver.find_element(By.CLASS_NAME, 'chatbot_DrawerContentWrapper').find_element(By.TAG_NAME, 'ul').find_elements(By.TAG_NAME,'li')
                 except:
                     print("\nNo more Chat bot questions need to be answered ")
-                    break
+                    return True
                 matched_key = next((key for key in question_mappings if key in question_text.lower()), None)
                 if question.text not in all_questions and  question.text:
                     all_questions.append(question.text)
@@ -314,7 +326,7 @@ def chatbot_questionnaire():
                 userInput = chatbotInputContainer.find_element(By.CSS_SELECTOR, '[data-placeholder]')
                 
                 userInput.clear()
-                automated_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else input('answer:\t')
+                automated_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else input(' Your answer::\t')
 
                 while True:
 
@@ -324,7 +336,7 @@ def chatbot_questionnaire():
                         error_message = "\n\t: You have exceeded the maximum limit of 50 characters"
                         automated_input = input(f"{error_message}\tPlease type again (under 100 characters):\t" )
                     else:
-                        print(f"\nYour answer:\t{automated_input if not userInput.text else userInput.text}")
+                        print(f"\n Your answer:\t{automated_input if not userInput.text else userInput.text}")
                         print()
                         break 
             except :
@@ -417,5 +429,7 @@ def chatbot_questionnaire():
 
             send_btn = driver.find_element(By.CLASS_NAME,'sendMsg')
             send_btn.click()
+        
     except:
         print("No Chat bot questions asked ‼️\n")
+        

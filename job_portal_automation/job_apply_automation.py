@@ -759,7 +759,11 @@ def manual_apply(job_data, job_title, company_name):
 
     # initial_html = driver.page_source
     click_result = click_apply_button(job_apply_element)
-    if not click_result:
+    
+    cv_btn_click_option = driver.find_element(By.PARTIAL_LINK_TEXT,'CV')
+    if cv_btn_click_option.is_enabled():
+        cv_btn_click_option.click()
+    if not click_result and cv_btn_click_option:
         return 1
     sleep(5)
     # updated_html = driver.page_source
@@ -1461,7 +1465,9 @@ def naukri_portal(experience, job_title, location, job_age, exclude_keywords):
                     driver.switch_to.window(current_window_handle)
                     continue
                 #### will give answers to the chatbot questionnaire
-                chatbot_questionnaire()
+                chat_bot_result = chatbot_questionnaire()
+                if not chat_bot_result:
+                    print('Didnt got the excepted output from the chatbot, Check your connectivity up')
                 sleep(2)
                 try:success_element = driver.find_element(By.CLASS_NAME, "apply-status-header.green")
                 except:...
