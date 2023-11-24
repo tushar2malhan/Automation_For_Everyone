@@ -38,8 +38,13 @@ question_mappings = {
     "contact": my_info.get             ("Number", my_info.get("number", "")),
     "website": my_info.get             ("Github", my_info.get("github", "")),
     "github": my_info.get              ("Github", my_info.get("github", "")),
+    'address':my_info.get              ("Address", my_info.get("address", "")),
+    'location':my_info.get             ("Address", my_info.get("address", "")),
     "current city": my_info.get        ("City", my_info.get("city", "")),
+    "city": my_info.get                ("City", my_info.get("city", "")),
     "current location": my_info.get    ("City", my_info.get("city", "")),
+    "state": my_info.get               ("State", my_info.get("state", "")),
+    "postal": my_info.get              ("Postal", my_info.get("postal", "")),
     "expected annual": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected salary": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected ctc": my_info.get        ("ECTC", my_info.get("ectc", "")),
@@ -98,6 +103,9 @@ location_to_city_type_gid = {
 
 ### location of the resume
 DownloadLocation = str(os.path.join(Path.home(), "Documents\\"))
+CredentialsLocation = str(os.path.join(Path.home(), 'Desktop\\Automation_For_Everyone'))
+import sys
+sys.path.append(CredentialsLocation)
 resume_file_path = DownloadLocation+"Tushar's Resume.pdf"
 service = Service()
 options = webdriver.ChromeOptions()
@@ -123,13 +131,13 @@ def refresh_page():
 
 def login_portal():
     
-    # Navigate to the Naukri website
+    ### Navigate to the Naukri website
     driver.get("https://www.naukri.com/nlogin/login")
     accept_cookies()
     
-
-    username = "tusharmalhan@gmail.com"
-    password = ""
+    ### Supply in your credentials
+    username = username   
+    password = password 
 
 
     sleep(2)

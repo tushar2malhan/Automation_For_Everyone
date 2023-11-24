@@ -573,7 +573,7 @@ def initialize_information():
                 
                 if (input_type == 'text') or input_type.lower() in [i.lower() for i in label_text.split()]:
                     print("\nTEXT OPTIONS\n")
-
+                    sleep(1)
                     # Check if the label_text starts with or contains any key in my_info
                     found_key = None
                     for key in question_mappings:
@@ -581,7 +581,8 @@ def initialize_information():
                             found_key = key
                     if not found_key:
                         found_key = next((key for key in my_info if key), None)
-                        
+                    if found_key.lower() == 'address':
+                        found_key = input_element.get_attribute('placeholder').lower()
                     if found_key:
                         # find the key from my_info dictionary and store the value in the response
                         if question_mappings.get(found_key) is not None:
