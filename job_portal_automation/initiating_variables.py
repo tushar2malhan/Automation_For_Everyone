@@ -8,6 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.service import Service
+import joblib
+import chromedriver_autoinstaller
 
 import configparser
 config = configparser.ConfigParser()
@@ -68,11 +70,11 @@ question_mappings = {
     "expected salary": my_info.get     ("ECTC", my_info.get("ectc", "")),
     "expected ctc": my_info.get        ("ECTC", my_info.get("ectc", "")),
     "salary expectation": my_info.get  ("ECTC", my_info.get("ectc", "")),
-    "join": my_info.get                ("Notice_period", my_info.get("Notice Period", "")),
-    "notice period": my_info.get       ("Notice_period", my_info.get("Notice Period", "")),
-    "join": my_info.get                ("Notice_period", my_info.get("Notice Period", "")),
-    "when can you start": my_info.get  ("Notice_period", my_info.get("Notice Period", "")),
-    "when can you start": my_info.get  ("Notice_period", my_info.get("Notice Period", "")),
+    "join": my_info.get                ("Notice_period", my_info.get("notice_period", "")),
+    "notice": my_info.get              ("Notice_period", my_info.get("notice_period", "")),
+    "join": my_info.get                ("Notice_period", my_info.get("notice_period", "")),
+    "when can you start": my_info.get  ("Notice_period", my_info.get("notice_period", "")),
+    "when can you start": my_info.get  ("Notice_period", my_info.get("notice_period", "")),
     "university": my_info.get          ("University", my_info.get("university", "")),
     "school": my_info.get              ("University", my_info.get("university", "")),
     "institute": my_info.get           ("University", my_info.get("university", "")),
@@ -82,10 +84,11 @@ question_mappings = {
     "pan": my_info.get                 ("PAN", my_info.get("Institute", "")),
     "nationality": my_info.get         ("Nationality", 'Indian'),
     'LinkedIn':my_info.get             ('LinkedInProfile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
-    'linkedIn':my_info.get             ('LinkedInProfile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
+    'linkedin':my_info.get             ('LinkedInProfile','https://www.linkedin.com/in/tushar-malhan-9981841ab'),
     'github':my_info.get               ('Github','https://github.com/tushar2malhan'),
     'website':my_info.get              ('Github','https://github.com/tushar2malhan'),
     'gender':                          ("Male"),
+    'country':my_info.get              ('Country',my_info.get("country", "india")),
     "skills": skills
 }
 
@@ -118,20 +121,41 @@ import sys
 sys.path.append(CredentialsLocation)
 from credentials import username, password
 username_ = username; password_ = password
-resume_file_path = DownloadLocation+"Tushar's Resume.pdf"
-service = Service()
+resume_file_path = DownloadLocation+"Tushar's Resume_2024.pdf" ###"C:\Users\gyala\Documents\Tushar's Resume_2024.pdf"
+photo_pic_path = r"C:\Users\gyala\OneDrive\Documents\pic.jpeg"
+driver_path = r"driver\chromedriver.exe"
+
+
+
 options = webdriver.ChromeOptions()
-# options.add_argument("--headless")                # Without GUI
-options.add_argument("--disable-notifications")
-options.add_argument("--disable-gpu")               # Disable GPU acceleration
-options.add_argument("--disable-infobars")          # Disable the "Chrome is being controlled by automated software" infobar
-options.add_argument("--disable-geolocation")       # Disable geolocation services
-options.add_argument("--disable-dev-shm-usage")     # Disable /dev/shm usage (useful for Docker)
-options.add_argument("--no-sandbox")                # Disable sandboxing (useful for some environments)
-options.add_argument("--disable-popup-blocking")    # Disable popup blocking
-options.add_argument("--ignore-certificate-errors") # Ignore certificate errors
-driver = webdriver.Chrome(service=service, options=options)
+options.add_argument("--start-maximized")
+options.add_argument('--disable-notifications')
+options.add_argument("--mute-audio")            
+# options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
+# options.add_argument("--headless")                                              # Without GUI
+options.add_argument("--disable-notifications")                                 # Disable all notifications
+options.add_argument("--disable-gpu")                                           # Disable GPU acceleration
+options.add_argument("--disable-infobars")                                      # Disable the "Chrome is being controlled by automated software" infobar
+options.add_argument("--disable-geolocation")                                   # Disable geolocation services
+options.add_argument("--disable-dev-shm-usage")                                 # Disable /dev/shm usage (useful for Docker)
+options.add_argument("--no-sandbox")                                            # Disable sandboxing (useful for some environments)
+options.add_argument("--disable-popup-blocking")                                # Disable popup blocking
+options.add_argument("--ignore-certificate-errors")                             # Ignore certificate errors
+# options.add_experimental_option("excludeSwitches", ["enable-automation"])     #  
+
+
+
+try:
+    chromedriver_autoinstaller.install(cwd=True)
+except Exception as err:                 
+    print("chromedriver_autoinstaller ",str(err)) 
+
+driver = webdriver.Chrome(options= options)
+
+        
 wait = WebDriverWait(driver, 10)
+
+
 
 def accept_cookies():
     actions = ActionChains(driver)
@@ -269,7 +293,8 @@ def successfull_response():
     the resume is uploaded to a file path
     """
     words = [ "Congratulations", "Thank you", 'successfully applied', 
-             'Application Sent', 'Back to Application']
+            'Application Sent', 'Back to Application',
+            "submitted successfully"]
     for word in words:
         if re.search(r'\b' + re.escape(word) + r'\b', driver.find_element(By.TAG_NAME,'body').text, re.IGNORECASE) :
             return True
@@ -320,13 +345,13 @@ def chatbot_questionnaire():
                 matched_key = next((key for key in question_mappings if key in question_text.lower()), None)
                 if question.text not in all_questions and  question.text:
                     all_questions.append(question.text)
-                    print('\n\n',question.text,'\n')
+                    print('\n\n\t',question.text,'\n')
             try:
                 chatbotInputContainer = driver.find_element(By.CSS_SELECTOR, '.chatbot_InputContainer')
                 userInput = chatbotInputContainer.find_element(By.CSS_SELECTOR, '[data-placeholder]')
                 
                 userInput.clear()
-                automated_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else input(' Your answer::\t')
+                automated_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else input('\tYour answer :\t')
 
                 while True:
 
@@ -350,12 +375,20 @@ def chatbot_questionnaire():
                         radio_button_options[index + 1] = radio_button.get_attribute('value')
                     for index, option in radio_button_options.items():
                         print(f'\t{index}. {option}')
-                    user_input = int(input('\tEnter Your option Number: ')) if radio_button_options else print('We are done\n')
-                    radio_button_to_select = radio_buttons[user_input - 1]
+                    matched_key = next((key for key in question_mappings if key in question_text.lower()), None)
+                    user_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else int(input('\n\tEnter Your option Number: ')) if radio_button_options else print('We are done\n')
+
+                    try:
+                        automated_answer = [(index,option) for index, option in radio_button_options.items() if option.startswith(user_input) ][0]
+                        radio_button_to_select = radio_buttons[automated_answer[0] - 1 ]
+                        if  not radio_button_to_select.is_enabled():
+                            radio_button_to_select = radio_buttons[user_input - 1]
+                    except:
+                        radio_button_to_select = radio_buttons[user_input - 1]
                     try:
                         radio_button_to_select.click()
                     except :
-                        # If the radio button element is not interactable, use JavaScript to click on it.
+                        sleep(2)
                         try:
                             driver.execute_script("document.querySelector('#{}').click()".format(radio_button_to_select.get_attribute('id')))
                         except:
@@ -377,7 +410,7 @@ def chatbot_questionnaire():
                         print(f'\t{index}. {option}')
                     
                     # user_input = int(input('\tEnter Your option Number: ')) if checkbox_btn_options else print('We are done\n')
-                   
+                
                     if checknox_button_options:
                         user_input = input("\n\tSelect the options you want to choose (numeric values separated by commas): ") 
                         try:
@@ -410,7 +443,7 @@ def chatbot_questionnaire():
                                 print('\n\n',question_text,end='\n')
                                 continue
                                     
-                                     
+                                    
                     # checkbox_button_to_select = checkbox_btn_options[user_input - 1]
                     # try:
                     #     checkbox_button_to_select.click()
@@ -431,5 +464,235 @@ def chatbot_questionnaire():
             send_btn.click()
         
     except:
-        print("No Chat bot questions asked ‼️\n")
+        print("No More Chat bot questions asked ‼️\n")
+    
+def predict_selected_country(input_text):
+    # Load the model and vectorizer
+    loaded_vectorizer = joblib.load('job_portal_automation/training_data/vectorizer_countries.joblib')
+    loaded_classifier = joblib.load('job_portal_automation/training_data/classifier_countries.joblib')
+
+    # Transform the input using the loaded vectorizer
+    input_vectorized = loaded_vectorizer.transform([input_text])
+
+    # Predict the label using the loaded classifier
+    predicted_label = loaded_classifier.predict(input_vectorized)[0]
+
+    # Return the modified question based on the predicted country
+    if predicted_label == 'country_0':
+        return "Select Your Country?"
+    else:
+        return ""
+    
+def identify_ethnicity_in_list(input_list):
+    loaded_vectorizer = joblib.load('job_portal_automation/training_data/vectorizer_ethnicity.joblib')
+    loaded_classifier = joblib.load('job_portal_automation/training_data/classifier_ethnicity.joblib')
+    
+    for text in input_list:
+        X_test = loaded_vectorizer.transform([text])
+        prediction = loaded_classifier.predict(X_test)
+
+        if prediction:
+            print("What is your ethnicity?")
+            break
+        else:
+            print(0)
+
+def read_gmail_account( subject, email, password):
         
+        import imaplib
+        import email
+
+        # Create an IMAP object
+        mailserver = imaplib.IMAP4_SSL('imap.gmail.com', 993)
+
+        # Your Gmail credentials
+        # username = email
+        # password = password
+
+        # Log in to the server
+        mailserver.login(email, password)
+
+        # Select a mailbox or folder
+        mailserver.select('INBOX')
+
+        # Search for unread emails with a specific subject
+        status, ids = mailserver.search(None, f'(SUBJECT "{subject}")')
+        
+        # Search for emails from a specific email address
+        status, ids = mailserver.search(None, '(FROM "sender@example.com")')
+
+        # Convert the list of IDs to a list of integers
+        ids = [int(id) for id in ids[0].split()]
+        ids = ids[::-1]
+
+        if not subject and ids:
+            
+            latest_email_id = ids[0]
+            # status, msg_data = mailserver.fetch(str(latest_email_id), '(RFC822)')
+            status, data = mailserver.fetch(str(latest_email_id), '(RFC822)')
+            message = email.message_from_bytes(data[0][1])
+
+            
+            otp = message['Subject']
+            # otp = otp[:6]
+            # print(otp)
+            print('From:', message['From'])
+            print('Subject:', message['Subject'])
+            print('Date:', message['Date'])
+            
+            # Get the email body
+            if message.is_multipart():
+                # The email body is a multipart message
+                for part in message.walk():
+                    # Find the HTML part
+                    if part.get_content_type() == 'text/html':
+                        # Get the payload and decode it
+                        body = part.get_payload(decode=True).decode()
+                        # Print the email body
+                        print('Body:', body)
+                        return body
+                    
+                    elif part.get_content_type() == 'text/plain':
+                        # Get the payload and decode it
+                        body = part.get_payload(decode=True).decode()
+                        # Print the email body
+                        print('Body:', body)
+                        return body
+                       
+            else:
+                # The email body is not a multipart message
+                # Get the payload and decode it
+                body = message.get_payload(decode=True).decode()
+                # Print the email body
+                print('Body:', body)
+                return body
+           
+
+        
+        # Loop through each email ID
+        for id in ids:
+            # Fetch the email message by ID
+            status, data = mailserver.fetch(str(id), '(RFC822)')
+            # Parse the email message into a Python object
+            message = email.message_from_bytes(data[0][1])
+            # Print some information about the email
+        
+            otp = message['Subject']
+            # otp = otp[:6]
+            # print(otp)
+            print('From:', message['From'])
+            print('Subject:', message['Subject'])
+            print('Date:', message['Date'])
+            
+            # Get the email body
+            if message.is_multipart():
+                # The email body is a multipart message
+                for part in message.walk():
+                    # Find the HTML part
+                    if part.get_content_type() == 'text/html':
+                        # Get the payload and decode it
+                        body = part.get_payload(decode=True).decode()
+                        # Print the email body
+                        print('Body:', body)
+                        return body
+                    
+                    elif part.get_content_type() == 'text/plain':
+                        # Get the payload and decode it
+                        body = part.get_payload(decode=True).decode()
+                        # Print the email body
+                        print('Body:', body)
+                        return body
+                       
+            else:
+                # The email body is not a multipart message
+                # Get the payload and decode it
+                body = message.get_payload(decode=True).decode()
+                # Print the email body
+                print('Body:', body)
+                return body
+
+def get_text_with_fallback(element):
+    # Try to get the text directly from the element
+    text = element.text.strip()
+    if text:
+        return text
+
+    # Try to get the text from the parent label element
+    try:
+        parent_label = element.find_element(By.XPATH, "ancestor::label")
+        text = parent_label.text.strip()
+        if text:
+            return text
+    except Exception:
+        pass
+
+    # Try to get the parent label's text content
+    try:
+        text = element.find_element(By.XPATH, "..").text.strip()
+        if text:
+            return text
+    except Exception:
+        pass
+
+    # Try to get text from all sibling elements and filter for text nodes
+    try:
+        sibling_text_nodes = element.find_elements(By.XPATH, "following-sibling::text()")
+        text = ' '.join(node.strip() for node in sibling_text_nodes if node.strip())
+        if text:
+            return text
+    except Exception:
+        pass
+
+    # If none of the methods work, return None
+    return None
+
+
+def find_label_text(input_element):
+    
+    """
+        Find the heading question of the input element
+    """
+    tags = ['label', 'input', 'textarea', 'div', 'span', 'p']  # Add more tags as needed
+    label_text = None
+
+    for tag in tags:
+        try:
+            if tag == 'label':
+                # Check for previous label if tag is label
+                label_element = input_element.find_element(By.XPATH, f'./preceding::{tag}[1]')
+                label_text = label_element.text.strip()
+            elif tag == 'input':
+                # Find the preceding element of other tags except label
+                label_text = input_element.find_element(By.XPATH, './preceding::*[normalize-space(text())!=""][1]').text
+            else:
+                label_text = input_element.find_element(By.XPATH, f'./preceding::{tag}[1]').text
+                
+            if label_text:
+                break
+        except Exception:
+            continue
+
+    if not label_text:
+        parent_element = input_element.find_element(By.XPATH, '..')
+        parent_text = parent_element.text.strip()
+
+        if '*' in parent_text:
+            grandparent_element = parent_element.find_element(By.XPATH, '..')
+            label_text = grandparent_element.text.strip()
+    if not label_text or len(label_text) <=1:
+        try:
+            label_text = input_element.get_attribute('placeholder') 
+        except Exception: 
+            try:
+                label_text = input_element.get_attribute('id') or input_element.get_attribute('name')
+            except Exception: ...
+    return label_text
+
+
+def find_element_by_text(xpath, text):
+    try:
+        # Attempt to find the element using the specified XPath and case-insensitive text comparison
+        element = driver.find_element(By.XPATH, f'{xpath}[contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "{text}")]')
+        return element
+    except :
+        ...

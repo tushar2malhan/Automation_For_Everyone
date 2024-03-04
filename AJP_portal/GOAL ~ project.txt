@@ -1,0 +1,17 @@
+GOAL ~ project
+
+3 targets set 🎯| 29-10-23 |
+- apply jobs in naukri portal 🎯-
+- apply jobs in linkedin portal 🎯-
+- allow it apply jobs based on websites as well 🎯 -
+- Finally creating a full front end for the websit 🎯 -
+
+
+= Current Issues facing in naukri portal 
+  - chat bot questions answer form issue  - ✅
+  - manual apply issue                    - 
+  - manual apply captcha issue            -
+  - complete naurki portal automation     -
+  - start with linkedin automation        -
+  - websites portals automation           -
+

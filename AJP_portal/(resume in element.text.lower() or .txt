@@ -1,0 +1,26 @@
+("resume" in element.text.lower() or "attach" in element.text.lower()) or (
+        any("resume" in attribute.lower() or "attach" in attribute.lower() for attribute in element.get_attribute_names()))
+
+
+.get_attribute('class')
+
+
+
+make it dynamic so that it can be identiifed on any website
+
+
+if select_elements[0].get_attribute('value') in select_elements[0].find_element(By.XPATH, "./ancestor::div").text:
+   question_of_select_check_box = select_elements[0].find_element(By.XPATH, "./ancestor::div").text.split(select_elements[0].get_attribute('value'))[0].split('\n')[-3:]
+   question_of_select_check_box = ( ' '.join(question_of_select_check_box)  )
+
+
+                            
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+PRECEEDING ELEMENTS
+
+radio_btn_input_options = select_btn_options.find_elements(By.CSS_SELECTOR, 'input[type="radio"]')
+
+
+
+# get parent n grandparent elements
+
+                parent_element = select_element.find_element(By.XPATH, '..')
+                parent_text = parent_element.text.strip()
+
+                if '*' in parent_text:
+                    grandparent_element = parent_element.find_element(By.XPATH, '..')
+                    label_text = grandparent_element.text.strip()
+       
+
+
+

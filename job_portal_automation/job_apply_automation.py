@@ -28,11 +28,14 @@ from datetime import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+import joblib
+from urllib.parse import urlparse
 
 
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import TimeoutException
+import autoit
 
 # Import the variables from the initiating_variables module
 import initiating_variables
@@ -59,6 +62,10 @@ login_portal = initiating_variables.login_portal
 click_element_or_js = initiating_variables.click_element_or_js
 chatbot_questionnaire = initiating_variables.chatbot_questionnaire
 resume_file_path = initiating_variables.resume_file_path
+photo_pic_path = initiating_variables.photo_pic_path
+get_text_with_fallback = initiating_variables.get_text_with_fallback
+find_label_text = initiating_variables.find_label_text
+
 
 applied_jobs = set()  
 
@@ -329,375 +336,6 @@ def filling_questionnaire(company_name, job_data):
         import pdb; pdb.set_trace()
         return 1
 
-def initialize_information():
-    
-    """
-        Lets sub-divide selected options and input options asekd in the page
-        and allow user to give an answer to it !!
-    """
-
-    # my_info = {"Given": "Tushar", "First": "Tushar", "Family": "Malhan", "Last": "Malhan", "Full Name": "Tushar Malhan", "Local given Name": "Tushar", "Address": "Khargar Laxmi Nivas", "Email": "tusharmalhan@gmail.com", "city": "Navi Mumbai", "Postal code": "400614", "Phone Number": "7814891872", "phone extension": "+91", "password": "Test@123", "Verify new": "Test@123", "LinkedIn Profile": "https://www.linkedin.com/in/tushar-malhan-9981841ab", "Website": "https://github.com/tushar2malhan", "Github": "https://github.com/tushar2malhan"}    
-    
-    ### one liner
-    # matched_label = next((label for key in my_info.keys() for label in driver.find_elements(By.XPATH, '//label|//*[text()]') if re.search(rf"({'|'.join(map(re.escape, key.split()))})", label.text, re.IGNORECASE)), None)
-   
-    ### one liner >>> use ! in pdb
-    # !for key in my_info.keys(): key_words = key.split(); pattern = re.compile(rf"({'|'.join(map(re.escape, key_words))})", re.IGNORECASE); labels = driver.find_elements(By.XPATH, '//label'); matched_label = None; for label in labels: if pattern.search(label.text): matched_label = label; break; if matched_label: input_element = driver.find_element(By.XPATH, f"//label[text()='{matched_label.text}']/following-sibling::input"); value = input_element.get_attribute('value'); print(f"Key: {key}  Value: {value}"); else: label_text = input(f"No label found for key '{key}'. Please enter the corresponding label text: "); print(f"{key}: {label_text}")
-    
-    
-    sleep(1.5)
-        
-    def select_options():
-        '''
-            Find all the selected options text and ask suser to choose their answer 
-        '''
-        select_elements = driver.find_elements(By.XPATH, "//select")
-        for select_element in select_elements:
-            try:
-                
-                ### Find the heading TEXT  of the selected question
-                heading_element = select_element.find_element(By.XPATH, 'preceding-sibling::*[1]').text
-                if not heading_element:
-                    # preceding_sibling  with label 
-                    heading_element = select_element.find_element(By.XPATH, 'preceding-sibling::label[1]').text
-                    # next sibling  with label 
-                    if not heading_element:
-                        heading_element = select_element.find_element(By.XPATH, "following-sibling::*[1]").text
-
-                    
-                if type(heading_element) == list:
-                    heading_element = heading_element[0]
-                if not type(heading_element) == str:
-                    heading_text = heading_element.text.strip()
-                else:
-                    heading_text = heading_element
-                
-                if not heading_text:
-                    continue
-                    
-                print(f'\n\t {heading_text}  \n')
-                
-
-                ### Select object will print the options and ask user to give an answer
-                # Create a Select object for the select element
-                select = Select(select_element)
-
-                # Print the option text with index starting from 0
-                options = select.options
-                valid_choices = []
-                for i, option in enumerate(options, start=0):
-                    if option.text:
-                        valid_choices.append(i)
-
-                # Proceed further only if there are valid choices
-                if valid_choices:
-                    # Retrieve the option text using JavaScript
-                    option_texts = driver.execute_script("return Array.from(arguments[0].options).map(option => option.textContent.trim())", select_element)
-
-                    # Iterate over valid choices and their corresponding option texts
-                    for choice in valid_choices:
-                        option_text = option_texts[choice]
-                        print(f"{choice}. {option_text}")
-
-                    # Allow user input to select an option
-                    while True:
-                        try:
-                            choice = int(input("Enter the number corresponding to your choice: "))
-                            if choice in valid_choices:
-                                break
-                            print("Invalid choice. Please try again.")
-                        except ValueError:
-                            print("\n\n\tInvalid input. Please enter a number.")
-
-                    selected_option_text = option_texts[choice]
-                    selected_option = options[choice]
-                    selected_option.click()
-                    print(f"You selected: {selected_option_text}")
-                    # Add your desired logic here
-                else:
-                    print("No valid options available")
-                    # Handle the case when there are no valid choices
-                    # Add alternative logic or display an appropriate message
-            except Exception as e:
-                print(f"An error occurred: {str(e)}")
-
-    try:
-        select_options()
-    except Exception as e:
-        print('No select options available in the page \n')
-        print(f"An error occurred: {str(e)}")
-
-
-    def input_options_python():
-        
-        # Find all the  input elements on the page
-        form_element = None
-        try:
-            form_element = driver.find_element(By.TAG_NAME, 'form')
-        except: ...
-        if form_element:
-            input_elements = form_element.find_elements(By.XPATH, './/input[@type!="hidden" and not(@hidden) and (@class or @id)]|//select[@style!="display:none" and (@class or @id)]')
-            if not input_elements:
-                input_elements = form_element.find_elements(By.XPATH, './/input[@type="hidden"]')
-        else:
-            input_elements = driver.find_elements(By.XPATH, '//input[@type!="hidden" and not(@hidden) and (@class or @id)]|//select[@style!="display:none" and (@class or @id)]')
-
-        if not input_elements:
-            input_elements = driver.find_elements(By.TAG_NAME,'input')
-            input_elements = [i  for i in input_elements if  i.get_attribute('value') =='']
-        try:
-            try:
-                resume_button = driver.find_element(By.XPATH, "//button[contains(., 'resume') or contains(., 'Select file')]")
-                driver.execute_script("arguments[0].removeAttribute('disabled');", resume_button)
-            except:
-                resume_button = driver.find_element(By.XPATH, '//input[contains(text(), "resume")]')
-            sleep(1)
-            file_path = resume_file_path
-            sleep(1)
-            if resume_button:
-                resume_button.send_keys(file_path)
-
-                sleep(2)
-                print(' Added file Attachment of Resume  ')
-                
-                import autoit
-                autoit.win_activate(driver.title)
-                sleep(3)            
-                dialog_window_title="Open"
-                try:
-                    lbl = autoit.win_get_state(dialog_window_title)
-                    if lbl !=5:
-                        autoit.win_active(dialog_window_title)
-                        sleep(5)
-                        print('gonna send the file of Resume from the local system') 
-                        lbl = autoit.control_send(dialog_window_title, "Edit1", file_path)
-                        print('Edit', lbl)
-                        sleep(2)
-                        lbl = autoit.control_click(dialog_window_title, "Button1")
-                        print('Sent', lbl)
-                except:
-                    ...
-            else:...
-        except:
-            print('\nNo file Attachment Found of Resume, will try with input element. \n')
-
-        try:
-            [i.send_keys(resume_file_path) for i in input_elements if i.get_attribute('type') == 'file' ]
-            try:
-                resume_name_from_website = [i.get_attribute('value') for i in input_elements if i.get_attribute('type') == 'file' ][0].split('\\')[-1]
-                if resume_name_from_website == resume_file_path.split('\\')[-1]:
-                    sleep(2)
-                    print(' Added file Attachment of Resume, can see it clearly on the screen ')
-            except:
-                print("Place the file manually, as we couldnt detect the extact location of the file path ")
-                ...
-        except:
-            print("Place the file manually, as we couldnt detect the extact location of the file path ")
-
-
-        def find_label_text(input_element):
-            
-            tags = ['label', 'input', 'textarea', 'div', 'span', 'p']  # Add more tags as needed
-            label_text = None
-
-            for tag in tags:
-                try:
-                    if tag == 'label':
-                        # Check for previous label if tag is label
-                        label_element = input_element.find_element(By.XPATH, f'./preceding::{tag}[1]')
-                        label_text = label_element.text.strip()
-                    elif tag == 'input':
-                        # Find the preceding element of other tags except label
-                        label_text = input_element.find_element(By.XPATH, './preceding::*[normalize-space(text())!=""][1]').text
-                    else:
-                        label_text = input_element.find_element(By.XPATH, f'./preceding::{tag}[1]').text
-                        
-                    if label_text:
-                        break
-                except Exception:
-                    continue
-
-            if not label_text:
-                parent_element = input_element.find_element(By.XPATH, '..')
-                parent_text = parent_element.text.strip()
-
-                if '*' in parent_text:
-                    grandparent_element = parent_element.find_element(By.XPATH, '..')
-                    label_text = grandparent_element.text.strip()
-            if not label_text:
-                try:
-                    label_text = input_element.get_attribute('id') or input_element.get_attribute('name')
-                except Exception: ...
-            return label_text
-
-
-        if contains_captcha_text():
-            sleep(1)
-            print('\nContains Captcha, apply manually ')
-            return 0
-
-        # Iterate over the input elements
-
-        for input_element in input_elements:
-            # Try to find the inner input element's text or label
-            label_text = None
-            try:
-                inner_text = input_element.text
-            except: 
-                inner_text = None
-            ### if no inner text found, then find the latest element which contains text  
-            if not inner_text:
-                try:
-                    label_text = find_label_text(input_element)
-                    # label = input_element.find_element(By.XPATH, './preceding::*[normalize-space(text())!=""][1]')
-                    if not label_text:
-                        placeholder_value = input_element.get_attribute("placeholder") or input_element.get_attribute('id') or input_element.get_attribute('name')
-                        label_text = placeholder_value
-                except:  
-                    label_text = None
-
-            if not label_text:
-                label_text = input_element.get_attribute("value") or input_element.get_attribute("title")
-
-            # Determine the type of input element
-            input_type = input_element.get_attribute('type')
-
-            response = None
-
-            # Determine the type of input element
-            input_type = input_element.get_attribute('type')
-            response = None
-            print("Gonna initiate with Input options\n")
-            if label_text:
-                print(f"\n\nLabel Text: {label_text}")
-                
-                if (input_type == 'text') or input_type.lower() in [i.lower() for i in label_text.split()]:
-                    print("\nTEXT OPTIONS\n")
-                    sleep(1)
-                    # Check if the label_text starts with or contains any key in my_info
-                    found_key = None
-                    for key in question_mappings:
-                        if key and (key.lower() in list(map(lambda word: word.lower(), label_text.split(' '))) ):
-                            found_key = key
-                    if not found_key:
-                        found_key = next((key for key in my_info if key), None)
-                    if found_key.lower() == 'address':
-                        found_key = input_element.get_attribute('placeholder').lower()
-                    if found_key:
-                        # find the key from my_info dictionary and store the value in the response
-                        if question_mappings.get(found_key) is not None:
-                            response = question_mappings.get(found_key)
-                    
-                        else:
-                            if 'date' in input_type.lower():
-                                # Prompt the user to enter the date value
-                                date_input = input(f"Enter the date for '{label_text}' (YYYY-MM-DD): ")
-                                try:
-                                    # Validate the date format
-                                    datetime.strptime(date_input, "%Y-%m-%d")
-                                    response = date_input
-                                except ValueError:
-                                    print("Invalid date format. Please enter a date in YYYY-MM-DD format.")
-                            else:
-                                # Prompt the user to enter the value, as label text couldn't be found in my_info
-                                response = input(f"Enter value for '{label_text}': ")
-                    else:
-                        # Prompt the user to enter the value, as label text couldn't be found in my_info
-                        response = input(f"Enter value for '{label_text}': ")
-
-                    try:
-                        try:
-                            input_element.clear()
-                        except: print("cant clear the element")
-                        input_element.send_keys(response)
-                        ### Enter the response in the input element
-                        print(f'Response Given for {found_key}:\t', response)
-                    except Exception as e:
-                        print(' Issue in sending in the response', e)
-
-                    # break
-
-                elif 'date' in input_type.lower():
-                    # Prompt the user to enter the date value
-                    date_input = input(f"Enter the date for '{label_text}' (YYYY-MM-DD): ")
-                    try:
-                        # Validate the date format
-                        datetime.strptime(date_input, "%Y-%m-%d")
-                        response = date_input
-                    except ValueError:
-                        print("Invalid date format. Please enter a date in YYYY-MM-DD format.")
-
-                    # Enter the response in the input element
-                    input_element.send_keys(response)
-                    # child_input = input_element.find_element(By.CSS_SELECTOR, 'input')
-                    # child_input.send_keys(response)
-
-                elif input_type == 'select-one':
-                    print("\nSELECTED OPTIONS")
-
-                    # Get the available options for the select element
-                    options = input_element.find_elements(By.XPATH, './option')
-
-                    # Display the label and available options to the user
-                    if label_text is None or label_text == "*":
-                        parent_element = input_element.find_element(By.XPATH, '..')
-                        parent_text = parent_element.text
-                        print("Parent Text:", parent_text)
-                        label_text = parent_text
-
-                    print(label_text)
-
-                    for index, option in enumerate(options, start=1):
-                        print(f"{index}. {option.text}")
-
-                    # Prompt the user to select an option
-                    selected_option_index = int(input("Enter the option number: ")) - 1
-
-            
-                    # Select the chosen option
-                    options[selected_option_index].click()
-
-                elif input_type == 'radio':
-
-                    print("RADIO OPTIONS")
-
-                    # Find the parent element
-                    parent_element = input_element.find_element(By.XPATH, '..')
-
-                    # Print the text of the parent element
-                    parent_text = parent_element.text.strip()
-                    print(parent_text)
-
-                    # Find all radio elements and their corresponding labels or child elements' text
-                    radio_elements = parent_element.find_elements(By.XPATH, './/input[@type="radio"]')
-                    for radio in radio_elements:
-                        radio = radio[0]
-                        try:
-                            label_text = radio.find_element(By.XPATH, './following-sibling::label').text
-                            print(f"[{radio.get_attribute('value')}] {label_text}")
-                        except NoSuchElementException:
-                            child_text = radio.text
-                            print(f"[{radio.get_attribute('value')}] {child_text}")
-
-                    # Prompt the user to select a radio option
-                    response = input("Enter the option: ")
-
-                    # Find the corresponding radio element based on the response
-                    radio_element = driver.find_element(By.XPATH, f'//label[contains(text(), "{response}")]/input[@type="radio"]')
-                    radio_element.click()
-
-                    print(f"\nLabel/Text: {label_text}\nInput Type: {input_type}\nValue given: {response}\n")
-
-
-        return input_elements
-
-    try:
-        elements = input_options_python()
-    except:
-        ... 
-        print('No input options available\n')
-    return elements
-
 def manual_apply(job_data, job_title, company_name):
     """
       If quesForm not available, 
@@ -722,20 +360,22 @@ def manual_apply(job_data, job_title, company_name):
     
     
     job_apply_element = None
+
     if job_title:
         try:
             job_apply_element = driver.find_element(By.XPATH, f"//*[contains(text(), '{job_title}')]")
             try:
                 # Scroll to the element if it's not visible
-                if not job_apply_element.is_displayed():
+                if  job_apply_element.is_displayed():
                     driver.execute_script("arguments[0].scrollIntoView();", job_apply_element)
+                    [click_element_or_js(i) for i in driver.find_elements(By.XPATH, f"//*[contains(text(), '{job_title}')]")]
 
                 try:
                     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, get_element_xpath(job_apply_element)))).click()
                 except:
+                    [click_element_or_js(i) for i in driver.find_elements(By.XPATH, f"//*[contains(text(), '{job_title}')]")]
                     # Click on the element
                     click_element_or_js(job_apply_element)
-               
 
             except :
                 print("Element is not interactable or clickable.")
@@ -757,14 +397,33 @@ def manual_apply(job_data, job_title, company_name):
         return True
                   
 
-    # initial_html = driver.page_source
+    ### Click apply button 
     click_result = click_apply_button(job_apply_element)
     
-    cv_btn_click_option = driver.find_element(By.PARTIAL_LINK_TEXT,'CV')
-    if cv_btn_click_option.is_enabled():
-        cv_btn_click_option.click()
-    if not click_result and cv_btn_click_option:
-        return 1
+    cv_btn_click_option = driver.find_elements(By.PARTIAL_LINK_TEXT,'CV')
+    if cv_btn_click_option:
+        if cv_btn_click_option[0].is_enabled():
+            ...
+            # cv_btn_click_option[0].click()
+    if not click_result and len(cv_btn_click_option) == 0:
+        
+        element = driver.find_element(By.XPATH, "//*[contains(text(), 'Send your resume')]")
+        # Get the text from the element
+        text = element.text
+        # Define a regex pattern to match email addresses
+        email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        # Search for email addresses in the text using regex
+        emails_found = re.findall(email_pattern, text)
+        text = element.text
+        
+        # If emails are found, print them
+        if emails_found:
+            print("Email addresses found:")
+            for email in emails_found:
+                print(email)
+
+
+        return emails_found
     sleep(5)
     # updated_html = driver.page_source
     # if initial_html == updated_html:
@@ -791,6 +450,61 @@ def manual_apply(job_data, job_title, company_name):
         return 1
     else: ...
     
+    
+    def workday_form():
+
+        autofill_keyword = driver.find_elements(By.PARTIAL_LINK_TEXT, 'Autofill')
+        if autofill_keyword: autofill_keyword[0].click()
+        sleep(30)
+        initialize_information()
+        sleep(3)
+        signin = driver.find_elements(By.PARTIAL_LINK_TEXT, 'Sign')
+        # elements_with_aria_label = [i.find_elements(By.CSS_SELECTOR, '[aria-label]') for i in input_elements]
+        elements_with_aria_label = driver.find_elements(By.CSS_SELECTOR, '[aria-label^="Sign"]')
+        if not signin:
+            for element in elements_with_aria_label:
+                aria_label_value = element.get_attribute('aria-label')
+                print(f'Element Text: {element.text}, Aria-label Value: {aria_label_value}')
+                element.click()
+                break
+        else:
+            signin.click()
+            sleep(3)
+        if 'You may have entered the wrong email address or password or your account might be locked.' in driver.page_source:
+            # create_account_button = driver.find_element(By.XPATH, "//button[text()='Create Account']")  
+            Forgot_pass_button = driver.find_element(By.XPATH, "//button[text()='Forgot your password?']")  ; Forgot_pass_button.click()
+            sleep(3)
+            initialize_information()
+            try:
+                driver.find_element(By.XPATH, "//button[text()='Reset Password']").click()
+            except:
+                reset_btn = driver.find_element(By.XPATH, "//button[text()='Reset Password']"); reset_btn.send_keys(Keys.RETURN)
+
+
+        initialize_information()
+
+        checkbox_elements = driver.find_elements(By.XPATH, "//input[@type='checkbox']")
+        
+        for checkbox_element in checkbox_elements:
+            try:
+                checkbox_element.click()
+                print("Checkbox clicked successfully!")
+            except :
+                print("Checkbox is not interceptable. Trying alternative approach...")
+                driver.execute_script("arguments[0].click();", checkbox_element)
+                print("Checkbox clicked using JavaScript execution!")
+
+        create_account_button = driver.find_element(By.XPATH, "//button[text()='Create Account']")  
+        try:
+            create_account_button.click()
+        except:
+            create_account_button.send_keys(Keys.RETURN)
+            # driver.execute_script("arguments[0].click();", create_account_button)
+        if "Sign in to this account or enter an email address that isn't already in use."in driver.page_source:
+            driver.find_element(By.XPATH, "//button[text()='Sign In']").click()
+
+    if 'myworkday' in driver.current_url:
+        workday_form()
     ### After clicking apply , check if it asks for account creation
     
     ## solve the captch if its ask for the same.
@@ -822,9 +536,10 @@ def manual_apply(job_data, job_title, company_name):
             # The element is not enabled.
             return False
 
+            
+
     ### PART 1 : to Upload resume manually where it will allow to click the button
     try:
-
         anchor_and_button_elements = driver.find_elements(By.XPATH, "//a | //button")
         for element in anchor_and_button_elements:
             element_text = element.text.lower()
@@ -835,14 +550,38 @@ def manual_apply(job_data, job_title, company_name):
                 if is_clickable:
                     print(element.text)
                     element.click()
-
-
-
-        print('Checkbox Clicked which will apply directly with resume \n')
+                    break
+                
+        # print('Checkbox Clicked which will apply directly with resume \n')
     except:
         print('No checkbox found for applying directly with resume')
-    
-    sleep(1)
+    autoit.win_activate(driver.title)
+    sleep(2)            
+    dialog_window_title="Open"
+    try:
+        lbl = autoit.win_get_state(dialog_window_title)
+        if lbl !=5:
+            autoit.win_active(dialog_window_title)
+            sleep(5)
+            print('\nGonna send the file of Resume from the local system') 
+            lbl = autoit.control_send(dialog_window_title, "Edit1", resume_file_path)
+            print('Edit', lbl)
+            sleep(2)
+            lbl = autoit.control_click(dialog_window_title, "Button1")
+            print('Sent', lbl)
+    except:
+        
+        ### switch to valid iframe
+        iframes = driver.find_elements(By.TAG_NAME, 'iframe')
+        valid_iframes = []
+        for iframe in iframes:
+            src = iframe.get_attribute('src')
+            if src:
+                parsed_url = urlparse(src)
+                if parsed_url.scheme and parsed_url.netloc:
+                    valid_iframes.append(iframe)
+        if valid_iframes:
+            driver.switch_to.frame(iframe[0])
 
     ### PART 2 : to Upload resume manually
     resume_button = None
@@ -853,8 +592,12 @@ def manual_apply(job_data, job_title, company_name):
                 if input.get_attribute('type') == 'file':
                     resume_button = input
                     if 'resume' in input.get_attribute('id').lower() or 'resume' in input.get_attribute('name').lower() :
+                        resume_button = input
                         print("\nI'm Quite sure i clicked on the right button of resume, cause the name or id matches with the word resume.")
-                    break
+                        continue
+                    elif 'photo'in input.get_attribute('name').lower() or 'photo' in input.get_attribute('id').lower()  :
+                        input.send_keys(f"{photo_pic_path}")
+                    
         except:
             resume_button = driver.find_element(By.XPATH, "//button[contains(., 'Browse resume')]")
             driver.execute_script("arguments[0].removeAttribute('disabled');", resume_button)
@@ -868,7 +611,7 @@ def manual_apply(job_data, job_title, company_name):
     #     workday_form()
 
     sleep(10)
-    
+    if 'success' in driver.page_source  or resume_file_path.split("\\")[-1] in driver.page_source: print('Resume uploaded successfully\n')
     # Redirect Messages is present and click APPLY button
     try:
         redirect_message_element = driver.find_element(By.XPATH, "//*[contains(text(), 'redirect')]")
@@ -984,19 +727,28 @@ def manual_apply(job_data, job_title, company_name):
         print('No Next button found \n')
 
     sleep(1.2)
-    checkbox_elements = driver.find_elements(By.XPATH, "//input[@type='checkbox']")
+    checkbox_elements = driver.find_elements(By.CSS_SELECTOR, "input[type='checkbox']")
     # [i.click() for i in checkbox_elements]
     # [driver.execute_script("arguments[0].click();", i) for i in checkbox_elements]
 
     
+    
     for checkbox_element in checkbox_elements:
         try:
+            checkbox_text = get_text_with_fallback(checkbox_element)
+            if checkbox_text is not None:
+               print("Checkbox Text:", checkbox_text)
+            else:
+               print("Text not found for the checkbox.")
+
+
             checkbox_element.click()
             print("Checkbox clicked successfully!")
         except :
             print("Checkbox is not interceptable. Trying alternative approach...")
             driver.execute_script("arguments[0].click();", checkbox_element)
             print("Checkbox clicked using JavaScript execution!")
+
 
     sleep(1.2)
 
@@ -1007,7 +759,7 @@ def manual_apply(job_data, job_title, company_name):
     except: ...
     if submit:
         submit.click() 
-        sleep(2)
+        sleep(10)
         if successfull_response():
             print("\nCongratulations Job applied automatically\n")
             return True
@@ -1161,6 +913,346 @@ def manual_apply(job_data, job_title, company_name):
     else:
         print("\nCouldnt submit the job successfully\n")
 
+def initialize_information():
+    
+    """
+        Lets sub-divide selected options and input options asekd in the page
+        and allow user to give an answer to it !!
+    """
+    sleep(1.5)
+    select_elements = driver.find_elements(By.XPATH, "//select")
+    
+    def select_options():
+        '''
+            Find all the selected options text and ask suser to choose their answer 
+        '''
+
+        for select_element in select_elements:
+            
+
+            try:
+                
+                
+                ### Select object will print the options and ask user to give an answer
+                # Create a Select object for the select element
+                select = Select(select_element)
+                # Print the option text with index starting from 0
+                options = select.options
+                valid_choices = []
+                for i, option in enumerate(options, start=0):
+                    if option.text:
+                        valid_choices.append(i)
+
+                from job_portal_automation.initiating_variables import predict_selected_country
+
+
+                ### Find the heading TEXT  of the selected question
+                heading_element = select_element.find_elements(By.XPATH, 'preceding-sibling::*[1]')
+                if not heading_element:
+                    # preceding_sibling  with label 
+                    heading_element = select_element.find_elements(By.XPATH, 'preceding-sibling::label[1]')
+                    # next sibling  with label 
+                    if not heading_element:
+                        heading_element = select_element.find_elements(By.XPATH, "following-sibling::*[1]")
+
+                    
+                if type(heading_element) == list and heading_element:
+                    heading_element = heading_element[0]
+                if  type(heading_element) == str:
+                    heading_text = heading_element.text.strip()
+                else:
+                    heading_text = heading_element
+                
+                if not heading_text:
+                    input_question_text = ([i.text for i in options])
+                    for input_text in input_question_text:
+                        result = predict_selected_country(input_text)
+                        print(result)
+                    
+                    continue
+                else:
+                    print(f'\n\t {heading_text.text}  \n')
+                
+
+                # Proceed further only if there are valid choices
+                if valid_choices:
+                    # Retrieve the option text using JavaScript
+                    option_texts = driver.execute_script("return Array.from(arguments[0].options).map(option => option.textContent.trim())", select_element)
+
+                    # Iterate over valid choices and their corresponding option texts
+                    for choice in valid_choices:
+                        option_text = option_texts[choice]
+                        print(f"{choice}. {option_text}")
+
+                    # Allow user input to select an option
+                    while True:
+                        try:
+                            choice = int(input("Enter the number corresponding to your choice: "))
+                            if choice in valid_choices:
+                                break
+                            print("Invalid choice. Please try again.")
+                        except ValueError:
+                            print("\n\n\tInvalid input. Please enter a number.")
+
+                    selected_option_text = option_texts[choice]
+                    selected_option = options[choice]
+                    selected_option.click()
+                    print(f"You selected: {selected_option_text}")
+                    # Add your desired logic here
+                else:
+                    print("No valid options available")
+                    # Handle the case when there are no valid choices
+                    # Add alternative logic or display an appropriate message
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+
+    try:
+        select_options()
+    except Exception as e:
+        print('No select options available in the page \n')
+        print(f"An error occurred: {str(e)}")
+
+    elements = None
+
+    def select_checkboxes():
+        
+        if not select_elements:
+            select_elements = driver.find_elements(By.XPATH, "//input[@type='checkbox']")
+
+            ### after finding all checkboxes, lets find the text of the above element
+            # select_elements[0].find_element(By.XPATH, "./ancestor::div")
+            # if select_elements[0].get_attribute('value') in select_elements[0].find_element(By.XPATH, "./ancestor::div").text:
+            #     question_of_select_check_box = select_elements[0].find_element(By.XPATH, "./ancestor::div").text.split(select_elements[0].get_attribute('value'))[0].split('\n')[-3:]
+            #     question_of_select_check_box = ( ' '.join(question_of_select_check_box)  )
+            #     print(question_of_select_check_box)
+
+
+            # Function to load and use the model
+            # def identify_ethnicity_in_list(input_list):
+            #     loaded_vectorizer = joblib.load('training_data/vectorizer_ethnicity.joblib')
+            #     loaded_classifier = joblib.load('training_data/classifier_ethnicity.joblib')
+                
+            #     for text in input_list:
+            #         X_test = loaded_vectorizer.transform([text])
+            #         prediction = loaded_classifier.predict(X_test)
+
+            #         if prediction:
+            #             print("What is your ethnicity?")
+            #             break
+
+            ### print the question based on INPUT GIVEN select_elements question
+            # input_strings = []
+            # # [ i.get_attribute('value') for i in select_elements if i.get_attribute('value') else i.text  for i in select_elements] 
+            # for i in select_elements:
+            #     input_strings.append(get_text_with_fallback( i ))
+            # print('Input strings of all select elements, lets find the question out of it ', input_strings)
+            # identify_ethnicity_in_list(input_strings)
+
+
+                        
+            # Print options with enumerated numbers
+            for idx, option in enumerate(select_elements):
+                text = get_text_with_fallback(option)
+                print(f"{idx+1}: {text}")
+
+                if text == 'Male':
+                    option.click()
+                if [i for i in text.split(' ') if i in ('wish to answer')]:
+                    option.click()
+                if text in ('No'):
+                    option.click()
+
+        select_checkboxes()
+
+
+
+        ...
+
+    def input_options_python():
+        
+        # Find all the  input elements on the page
+        form_element = None
+        try:
+            form_element = driver.find_element(By.TAG_NAME, 'form')
+        except: print("No Form element found\n")
+        # input_elements = driver.find_elements(By.XPATH, '//input[@type!="hidden" and not(@hidden) and (@class or @id)]|//select[@style!="display:none" and (@class or @id)]')
+        
+        input_elements = driver.find_elements(By.XPATH, '//input')
+
+        if not input_elements:
+            input_elements = form_element.find_elements(By.XPATH, './/input[@type="hidden"]')
+        if not input_elements:
+            input_elements = driver.find_elements(By.TAG_NAME,'input')
+            input_elements = [i  for i in input_elements if  i.get_attribute('value') =='']
+        try:
+            try:
+                resume_button = driver.find_element(By.XPATH, "//button[contains(., 'resume') or contains(., 'Select file')]")
+                driver.execute_script("arguments[0].removeAttribute('disabled');", resume_button)
+            except:
+                resume_button = driver.find_element(By.XPATH, '//input[contains(text(), "resume")]')
+            sleep(1)
+            file_path = resume_file_path
+            sleep(1)
+            if resume_button:
+                resume_button.send_keys(file_path)
+                sleep(2)
+                print(' Added file Attachment of Resume  ')
+            else:...
+        except:
+            print('\nNo file Attachment Found of Resume, will try with input element. \n')
+
+        
+        if contains_captcha_text():
+            sleep(1)
+            print('\nContains Captcha, apply manually ')
+            return 0
+
+
+        for input_element in input_elements:
+            label_text = None
+            try:
+                inner_text = input_element.text
+            except: 
+                inner_text = None
+            if not inner_text:
+                try:
+                    label_text = find_label_text(input_element)
+                    if label_text.lower().startswith(('resume', 'cv', 'keyword', 'cover')): continue
+                    # label = input_element.find_element(By.XPATH, './preceding::*[normalize-space(text())!=""][1]')
+                    if not label_text:
+                        placeholder_value = input_element.get_attribute("placeholder") or input_element.get_attribute('id') or input_element.get_attribute('name')
+                        label_text = [key for key in question_mappings if key.lower() in placeholder_value.lower()][-1]
+                except:  
+                    label_text = None
+            if not label_text:
+                label_text = input_element.get_attribute("value") or input_element.get_attribute("title")
+            input_type = input_element.get_attribute('type')
+            response = None
+            print("Gonna initiate with Input options\n")
+            if label_text:
+                print(f"\n\nLabel Text: {label_text}")
+                if (input_type == 'text') or input_type.lower() in [i.lower() for i in label_text.split()]:
+                    print("\nTEXT OPTIONS\n")
+                    sleep(1)
+                    ### Check if the label_text starts with or contains any key in my_info
+                    found_key = None
+                    for key in question_mappings:
+                        if key and [key for key in question_mappings if key.lower() in  [i.lower() for i in label_text.split(' ')] ]:
+                            found_key = [key for key in question_mappings if key.lower() in  [i.lower() for i in label_text.split(' ')] ][0]
+                    if not found_key:
+                        found_key = my_info.get(found_key)
+                    # if found_key.lower() == 'address':
+                    #     found_key = input_element.get_attribute('placeholder').lower()
+                    if found_key:
+                       ### find the key from my_info dictionary and store the value in the response
+                        if question_mappings.get(found_key) is not None:
+                            response = question_mappings.get(found_key)
+                        else:
+                            if 'date' in input_type.lower():
+                                date_input = input(f"Enter the date for '{label_text}' (YYYY-MM-DD): ")
+                                try:
+                                    datetime.strptime(date_input, "%Y-%m-%d")
+                                    response = date_input
+                                except ValueError:
+                                    print("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+                            else:
+                                response = input(f"Enter value for '{label_text}': ")
+                    else:
+                        response = input(f"Enter value for '{label_text}': ")
+                    try:
+                        try:
+                            input_element.clear()
+                        except: print("cant clear the element")
+                        input_element.send_keys(response)
+                        print(f'Response Given for {found_key}:\t', response)
+                    except Exception as e:
+                        print(' Issue in sending in the response to the element')
+                    # break
+                elif 'date' in input_type.lower():
+                    # Prompt the user to enter the date value
+                    date_input = input(f"Enter the date for '{label_text}' (YYYY-MM-DD): ")
+                    try:
+                        # Validate the date format
+                        datetime.strptime(date_input, "%Y-%m-%d")
+                        response = date_input
+                    except ValueError:
+                        print("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+
+                    # Enter the response in the input element
+                    input_element.send_keys(response)
+                    # child_input = input_element.find_element(By.CSS_SELECTOR, 'input')
+                    # child_input.send_keys(response)
+
+                elif input_type == 'select-one':
+                    print("\nSELECTED OPTIONS")
+                    options = input_element.find_elements(By.XPATH, './option')
+                    if label_text is None or label_text == "*":
+                        parent_element = input_element.find_element(By.XPATH, '..')
+                        parent_text = parent_element.text
+                        print("Parent Text:", parent_text)
+                        label_text = parent_text
+
+                    print(label_text)
+
+                    for index, option in enumerate(options, start=1):
+                        print(f"{index}. {option.text}")
+
+                    # Prompt the user to select an option
+                    selected_option_index = int(input("Enter the option number: ")) - 1
+
+            
+                    # Select the chosen option
+                    options[selected_option_index].click()
+
+                elif input_type == 'radio':
+
+                    print("RADIO OPTIONS")
+
+                    # Find the parent element
+                    parent_element = input_element.find_element(By.XPATH, '..')
+
+                    # Print the text of the parent element
+                    parent_text = parent_element.text.strip()
+                    print(parent_text)
+
+                    # Find all radio elements and their corresponding labels or child elements' text
+                    radio_elements = parent_element.find_elements(By.XPATH, './/input[@type="radio"]')
+                    for radio in radio_elements:
+                        radio = radio[0]
+                        try:
+                            label_text = radio.find_element(By.XPATH, './following-sibling::label').text
+                            print(f"[{radio.get_attribute('value')}] {label_text}")
+                        except NoSuchElementException:
+                            child_text = radio.text
+                            print(f"[{radio.get_attribute('value')}] {child_text}")
+
+                    # Prompt the user to select a radio option
+                    response = input("Enter the option: ")
+
+                    # Find the corresponding radio element based on the response
+                    radio_element = driver.find_element(By.XPATH, f'//label[contains(text(), "{response}")]/input[@type="radio"]')
+                    radio_element.click()
+
+                    print(f"\nLabel/Text: {label_text}\nInput Type: {input_type}\nValue given: {response}\n")
+
+                # elif input_type == 'checkbox':
+                #     options = driver.find_elements(By.XPATH, './/input[@type="checkbox"]')
+                   
+                #     parent_element = options.find_element(By.XPATH, '..')
+                #     parent_text = parent_element.text.strip()
+
+                #     if '*' in parent_text:
+                #         grandparent_element = parent_element.find_element(By.XPATH, '..')
+                #         label_text = grandparent_element.text.strip()
+
+        return "Input elements Presented !"
+
+    try:
+        elements = input_options_python()
+    except:
+        print('No input options available\n')
+    return elements
+
 def naukri_portal(experience, job_title, location, job_age, exclude_keywords):
         
     try:    
@@ -1240,299 +1332,298 @@ def naukri_portal(experience, job_title, location, job_age, exclude_keywords):
         
             # Create a DataFrame to store the job data
             job_data = []
+            
             for job in all_jobs:
                 if job in applied_jobs:
                     continue
                 
-                sleep(1)
                 try:
-                    click_element_or_js(job)
-                except:
-                    sleep(3)
-                    print("\nStaleElementReferenceException occurred in job click. Retrying...\n")
-                    
-                    sleep(2)
+                    sleep(1)
                     try:
-                        driver.refresh()
-                        driver.get(job_url)
-                        accept_cookies()
-                        sleep(5)
                         click_element_or_js(job)
                     except:
-                        print("\nCant proceed with the stale element\n")
-                                    
-                        # try:
-                        #     job_links = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, job_links_classname )))
-                        #     try:
-                        #         sleep(1)
-                        #         all_jobs = wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, all_job_classname  )))
-                        #     except:
-                        #         all_jobs = [link.find_elements(By.TAG_NAME, "article") for link in job_links][0]
-                        #     print(f"\nLets initiate Automatic Job Search on Naukri Portal for {positions.upper()} position \n")
+                        sleep(3)
+                        print("\nStaleElementReferenceException occurred in job click. Retrying...\n")
                         
-                        # except Exception as e :
-                        #     print(f"\n\t Apologies, No Jobs found for Position {positions.upper()} as per your requirement \n ")
-                        #     continue
-        
-                        # df.to_csv(csv_file_path, index=False)
-
-                        # # Print a success message
-                        # print(f"\nJob data has been saved to {csv_file_path}\n")
-                        # driver.quit()
-
-                        
-                        # job_data.append([job_title, '', f"Not Applying because of keyword mentioned {keyword.lower()}", '', '', "No URL", '', '', ''])
-                        # driver.refresh()
-                        # driver.get(job_url)
-                        # accept_cookies()
-                        # sleep(3.5)
-                        
-                    
-                accept_cookies()
-                sleep(2)
-                
-                ## Switch to the First tab.
-                for window_handle in driver.window_handles:
-                    if window_handle != current_window_handle:
-                        driver.switch_to.window(window_handle)
+                        sleep(2)
+                        try:
+                            driver.refresh()
+                            driver.get(job_url)
+                            accept_cookies()
+                            sleep(5)
+                            click_element_or_js(job)
+                        except:
+                            print("\nCant proceed with the stale element\n")
+                                        
+                            try:
+                                job_links = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, job_links_classname )))
+                                try:
+                                    sleep(1)
+                                    all_jobs = wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, all_job_classname  )))
+                                except:
+                                    all_jobs = [link.find_elements(By.TAG_NAME, "article") for link in job_links][0]
+                                print(f"\nLets initiate Automatic Job Search on Naukri Portal for {positions.upper()} position \n")
+                            
+                            except Exception as e :
+                                print(f"\n\t Apologies, No Jobs found for Position {positions.upper()} as per your requirement \n ")
+                                
             
-                ## Switch to the First tab
-                # [ driver.switch_to.window(window_handle) for window_handle in driver.window_handles if window_handle != current_window_handle ]
+                                df.to_csv(csv_file_path, index=False)
 
+                                # Print a success message
+                                print(f"\nJob data has been saved to {csv_file_path}\n")
+                                driver.quit()
+
+                                
+                                job_data.append([job_title, '', f"Not Applying because of keyword mentioned {keyword.lower()}", '', '', "No URL", '', '', ''])
+                                driver.refresh()
+                                driver.get(job_url)
+                                accept_cookies()
+                                sleep(3.5)
+                                continue
+                            
+                        
+                    accept_cookies()
+                    sleep(2)
                     
-                recruiters_details = "No Recruiters Details Found"
+                    ## Switch to the First tab.
+                    for window_handle in driver.window_handles:
+                        if window_handle != current_window_handle:
+                            driver.switch_to.window(window_handle)
                 
-                try:
+                    ## Switch to the First tab
+                    # [ driver.switch_to.window(window_handle) for window_handle in driver.window_handles if window_handle != current_window_handle ]
+
+                        
+                    recruiters_details = "No Recruiters Details Found"
+                    
                     try:
                         try:
-                            html_content = driver.find_element(By.CLASS_NAME, "job-desc").text
-                        except:
-                            html_content = driver.find_element(By.CLASS_NAME, "styles_job-desc-container__txpYf").text
-                            
-                        recruiters_details = re.findall(r'\+91\d{10}', html_content)
-                        if not recruiters_details:
                             try:
-                                recruiters_details = driver.find_element(By.CLASS_NAME, "rec-details").text
+                                html_content = driver.find_element(By.CLASS_NAME, "job-desc").text
                             except:
-                                recruiters_details = "No Recruiters Details Found"
-                        else:...
-                    except: 
-                        # print('Look for phone number in description ')
-                        recruiters_details = ''.join(recruiters_details)
+                                html_content = driver.find_element(By.CLASS_NAME, "styles_job-desc-container__txpYf").text
+                                
+                            recruiters_details = re.findall(r'\+?\d{10}', html_content)
+                            if not recruiters_details:
+                                try:
+                                    recruiters_details = driver.find_element(By.CLASS_NAME, "rec-details").text
+                                except:
+                                    recruiters_details = "No Recruiters Details Found"
+                            else:...
+                        except: 
+                            # print('Look for phone number in description ')
+                            recruiters_details = ''.join(recruiters_details)
+                            
+                    except NoSuchElementException:
+                        recruiters_details = recruiters_details
+
                         
-                except NoSuchElementException:
-                    recruiters_details = recruiters_details
-
-                    
-                    
-                ###  Generate Info for the Job and save it in the csv file   
-                try:
-                    job_title = driver.find_elements(By.CLASS_NAME, job_variation_name )
-                    if not job_title:
-                        job_title = driver.find_elements(By.CLASS_NAME, job_title_name_variation_2 )
-                        if len(job_title) <=0:
-                            job_title = driver.title
-
-                    ### extracting the text from first element
-                    job_title = [i for i in job_title if i.text ][0].text
                         
-                    apply_flag = True
-                    for keyword in exclude_keywords:
-                        if keyword.lower() in [i.lower().replace('(', '').replace(')', '') for i in job_title.split(' ')]:
-                            print('Not applying for:', job_title, f' as keyword "{keyword.lower()}" is mentioned in the job title\n')
-                            job_data.append([job_title, '', f"Not Applying because of keyword mentioned {keyword.lower()}", '', '', "No URL", '', '', ''])
-                            apply_flag = False
-                            break
+                    ###  Generate Info for the Job and save it in the csv file   
+                    try:
+                        job_title = driver.find_elements(By.CLASS_NAME, job_variation_name )
+                        if not job_title:
+                            job_title = driver.find_elements(By.CLASS_NAME, job_title_name_variation_2 )
+                            if len(job_title) <=0:
+                                job_title = driver.title
 
-                    if not apply_flag:
-                        sleep(1)
-                        driver.close()
-                        driver.switch_to.window(current_window_handle)
-                        sleep(1.5)
-                        continue
-                    
-                    try:
-                        company_name_raw = driver.find_element(By.CLASS_NAME, company_name_raw)
-                    except:
-                        company_name_raw = driver.find_element(By.CLASS_NAME, company_name_variation_2)
-                    
-                    company_name = company_name_raw.find_element(By.TAG_NAME, "a").text
-                    try:
-                        salary = driver.find_element(By.CLASS_NAME,salary_classname).text
-                    except:
-                        salary = driver.find_element(By.CLASS_NAME, salary_classname_variation_2 ).text
+                        ### extracting the text from first element
+                        job_title = [i for i in job_title if i.text ][0].text
+                            
+                        apply_flag = True
+                        for keyword in exclude_keywords:
+                            if keyword.lower() in [i.lower().replace('(', '').replace(')', '') for i in job_title.split(' ')]:
+                                print('Not applying for:', job_title, f' as keyword "{keyword.lower()}" is mentioned in the job title\n')
+                                job_data.append([job_title, '', f"Not Applying because of keyword mentioned {keyword.lower()}", '', '', "No URL", '', '', ''])
+                                apply_flag = False
+                                break
+
+                        if not apply_flag:
+                            sleep(1)
+                            driver.close()
+                            driver.switch_to.window(current_window_handle)
+                            sleep(1.5)
+                            continue
                         
-                    print(f'\nClicking the  Job Title {job_title}  Apply Button...\t\n')
-                    job_data.append([job_title, company_name, "Applied Successfully", salary, recruiters_details ,"No URL", '','',''])
-                
-                except Exception as e :
-
-                    sleep(2)
-                    print(f"Found some issues in getting meta info from the job we need to click \n" )
-
-                    print("############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n")
+                        try:
+                            company_name_raw = driver.find_element(By.CLASS_NAME, company_name_raw)
+                        except:
+                            company_name_raw = driver.find_element(By.CLASS_NAME, company_name_variation_2)
+                        
+                        company_name = company_name_raw.find_element(By.TAG_NAME, "a").text
+                        try:
+                            salary = driver.find_element(By.CLASS_NAME,salary_classname).text
+                        except:
+                            salary = driver.find_element(By.CLASS_NAME, salary_classname_variation_2 ).text
+                            
+                        print(f'\nClicking the  Job Title {job_title}  Apply Button...\t\n')
+                        job_data.append([job_title, company_name, "Applied Successfully", salary, recruiters_details ,"No URL", '','',''])
                     
-                    
+                    except Exception as e :
 
-                    company_name = driver.title
-                    result = manual_apply(job_data, job_title, company_name)
-                    if result == "Career Section Unavailable":
-                        job_data.append([job_title, company_name, "Career Section Unavailable", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
-                    elif result == "Issue in Web Page":
-                        job_data.append([job_title, company_name, "Issue in Web Page", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
-                    else:
-                        job_data.append(["job_title" if not job_title else job_title, "company_name", "Applied on the company's portal", "  Not Disclosed by Recruiter ", recruiters_details, driver.current_url, '','',''])
-                    driver.close()
-                    driver.switch_to.window(current_window_handle)
-                    sleep(3) 
-                    continue
-                
+                        sleep(2)
+                        print(f"Found some issues in getting meta info from the job we need to click \n" )
 
-                ### Click on the apply button  
-                try:
-                    try:
-                        link_text = driver.find_elements(By.CLASS_NAME, apply_btn_classname )
-                        if link_text:
-                            link_text = link_text[0] 
+                        print("############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n")
+                        
+                        
+
+                        company_name = driver.title
+                        result = manual_apply(job_data, job_title, company_name)
+                        if result == "Career Section Unavailable":
+                            job_data.append([job_title, company_name, "Career Section Unavailable", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
+                        elif result == "Issue in Web Page":
+                            job_data.append([job_title, company_name, "Issue in Web Page", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
                         else:
-                            link_text = driver.find_elements(By.CSS_SELECTOR, apply_btn_cssname_variation_2 )[0]
-                            
-                    except :
-                        link_text = driver.find_element(By.CLASS_NAME, "already-applied")
-                        print(f"Wait, Already applied to {company_name} for the title {job_title}.\n ")
-                        job_data.append([job_title, company_name, "Already applied", salary, recruiters_details, "No URL", '','',''])
+                            job_data.append(["job_title" if not job_title else job_title, "company_name", "Applied on the company's portal", "  Not Disclosed by Recruiter ", recruiters_details, driver.current_url, '','',''])
+                        driver.close()
+                        driver.switch_to.window(current_window_handle)
+                        sleep(3) 
+                        continue
+                    
+
+                    ### Click on the apply button  
+                    try:
+                        try:
+                            link_text = driver.find_elements(By.CLASS_NAME, apply_btn_classname )
+                            if link_text:
+                                link_text = link_text[0] 
+                            else:
+                                link_text = driver.find_elements(By.CSS_SELECTOR, apply_btn_cssname_variation_2 )[0]
+                                
+                        except :
+                            link_text = driver.find_element(By.CLASS_NAME, "already-applied")
+                            print(f"Wait, Already applied to {company_name} for the title {job_title}.\n ")
+                            job_data.append([job_title, company_name, "Already applied", salary, recruiters_details, "No URL", '','',''])
+                            driver.close()
+                            driver.switch_to.window(current_window_handle)
+                            continue
+
+                    except NoSuchElementException:
+                        print('\n############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n')
+                        try:
+                            link_text = driver.find_element(By.CLASS_NAME, "company-site-button")
+                            link_text.click()
+                        except:
+                            link_text = driver.find_element(By.CLASS_NAME, apply_btn_cssname_variation_3)[0].click()
+                        sleep(10)
+                        company_website = driver.current_url
+                        driver.close()
+                        # Switch to company website
+                        [ driver.switch_to.window(window_handle) for window_handle in driver.window_handles if window_handle != current_window_handle ]
+                    
+                        ### WHEN MANUAL RUN , JUST RETURN FROM FUNCTION, DONT SWITCH IN WINDOW
+                        result = manual_apply(job_data, job_title, company_name)
+                        if result == "Career Section Unavailable":
+                            job_data.append([job_title, company_name, "Career Section Unavailable", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
+                        elif result == "Issue in Web Page":
+                            job_data.append([job_title, company_name, "Issue in Web Page", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
+                        else:
+                            job_data.append(["job_title", "company_name", "Apply manually on company's portal", "  Not Disclosed by Recruiter ", recruiters_details, driver.current_url, '','',''])
+                        driver.close()
+                        driver.switch_to.window(current_window_handle)
+                        sleep(3)
+                        continue
+                    
+                    sleep(1)
+                    print('Clicking Apply button... \t\n')
+                    try:    link_text.click()
+                    except: sleep(2.5);link_text.click()
+                    print('Apply button Clicked❗\t\n')
+                    sleep(2)
+
+                    ### check if company has disabled you to apply 
+                    if 'This company does not require you to apply again as you have previously' in driver.page_source:
+                        print(f"\nJob submission failed for the title {job_title} to {company_name}, as company has blocked you\n")
+                        job_data.append([job_title, company_name, "Company Banned You, LOL ! ", salary, recruiters_details ,driver.current_url, '','',''])
+                        ### Switch back to original tab, as job cant be posted
                         driver.close()
                         driver.switch_to.window(current_window_handle)
                         continue
 
-                except NoSuchElementException:
-                    print('\n############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n')
+                    filling_questionnaire(company_name, job_data)
+                    ### After filling the Quesstionnaire form , if still you find questionnaire, issue in Page
+                    qus_form = None
                     try:
-                        link_text = driver.find_element(By.CLASS_NAME, "company-site-button")
-                        link_text.click()
+                        sleep(3)
+                        qus_form = driver.find_element(By.NAME, "qusForm")
                     except:
-                        link_text = driver.find_element(By.CLASS_NAME, apply_btn_cssname_variation_3)[0].click()
-                    sleep(10)
-                    company_website = driver.current_url
-                    driver.close()
-                    # Switch to company website
-                    [ driver.switch_to.window(window_handle) for window_handle in driver.window_handles if window_handle != current_window_handle ]
-                
-                    ### WHEN MANUAL RUN , JUST RETURN FROM FUNCTION, DONT SWITCH IN WINDOW
-                    result = manual_apply(job_data, job_title, company_name)
-                    if result == "Career Section Unavailable":
-                        job_data.append([job_title, company_name, "Career Section Unavailable", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
-                    elif result == "Issue in Web Page":
-                        job_data.append([job_title, company_name, "Issue in Web Page", "Not Disclosed by Recruiter", [], driver.current_url, '', '', ''])
-                    else:
-                        job_data.append(["job_title", "company_name", "Apply manually on company's portal", "  Not Disclosed by Recruiter ", recruiters_details, driver.current_url, '','',''])
-                    driver.close()
-                    driver.switch_to.window(current_window_handle)
-                    sleep(3)
-                    continue
-                
-                sleep(1)
-                print('Clicking Apply button... \t\n')
-                try:    link_text.click()
-                except: sleep(2.5);link_text.click()
-                print('Clicked on apply button ❗\t\n')
-                sleep(2)
-
-                ### check if company has disabled you to apply 
-                if 'This company does not require you to apply again as you have previously' in driver.page_source:
-                    print(f"\nJob submission failed for the title {job_title} to {company_name}, as company has blocked you\n")
-                    job_data.append([job_title, company_name, "Company Banned You, LOL ! ", salary, recruiters_details ,driver.current_url, '','',''])
-                    ### Switch back to original tab, as job cant be posted
-                    driver.close()
-                    driver.switch_to.window(current_window_handle)
-                    continue
-
-                filling_questionnaire(company_name, job_data)
-                ### After filling the Quesstionnaire form , if still you find questionnaire, issue in Page
-                qus_form = None
-                try:
-                    sleep(3)
-                    qus_form = driver.find_element(By.NAME, "qusForm")
-                except:
-                    try:
-                        qus_form = driver.find_element(By.NAME, "qupForm")
-                    except: ...
-                if qus_form:
-                    print(f"\nApply Manually \nJob submission failed for the title {job_title} to {company_name}.\n")
-                    job_data.append([job_title, company_name, "Submission Failed ", salary, recruiters_details ,driver.current_url, '','',''])
+                        try:
+                            qus_form = driver.find_element(By.NAME, "qupForm")
+                        except: ...
+                    if qus_form:
+                        print(f"\nApply Manually \nJob submission failed for the title {job_title} to {company_name}.\n")
+                        job_data.append([job_title, company_name, "Submission Failed ", salary, recruiters_details ,driver.current_url, '','',''])
+                        
+                        driver.close()
+                        driver.switch_to.window(current_window_handle)
+                        continue
+                    #### will give answers to the chatbot questionnaire
+                    chat_bot_result = chatbot_questionnaire()
+                    success_element = None
+                    sleep(2)
+                    try:success_element = driver.find_element(By.CLASS_NAME, "apply-status-header.green")
+                    except:...
+                    daily_quota_limit = None
                     
+                    try:daily_quota_limit = driver.find_element(By.XPATH, "//span[contains(text(),'Your daily quota has been expired.')]")
+                    except NoSuchElementException: ...
+                    if daily_quota_limit:
+                        driver.close()
+                        print("\nThe limit to apply to all your specific jobs has been reached!")
+                        print('Catch yeah tommorrow')
+                        break
+                    sleep(1.2)
+                    if success_element:
+                        print(f"Job submitted successfully for the title {job_title} to {company_name}\n\n")
+                        sleep(1)
+                    else:
+                        try:
+                            if link_text.text !='Applied':
+                                
+                                print(f"Job submission failed for the title {job_title} to {company_name}.\n")
+                                job_data.append([job_title, company_name, "Submission Failed ", salary, recruiters_details ,driver.current_url, '','',''])
+                            else: ...
+                        except:
+                            driver.refresh()
+                            driver.back()
+
+                    # close the driver for current job portal
                     driver.close()
+
+                    # add the job to the set
+                    applied_jobs.add(job)
+
+                    # Switch back to the original tab.
                     driver.switch_to.window(current_window_handle)
-                    continue
-                #### will give answers to the chatbot questionnaire
-                chat_bot_result = chatbot_questionnaire()
-                if not chat_bot_result:
-                    print('Didnt got the excepted output from the chatbot, Check your connectivity up')
-                sleep(2)
-                try:success_element = driver.find_element(By.CLASS_NAME, "apply-status-header.green")
-                except:...
-                daily_quota_limit = None
-                
-                try:daily_quota_limit = driver.find_element(By.XPATH, "//span[contains(text(),'Your daily quota has been expired.')]")
-                except NoSuchElementException: ...
-                if daily_quota_limit:
-                    driver.close()
-                    print("\nThe limit to apply to all your specific jobs has been reached!")
-                    print('Catch yeah tommorrow')
-                    break
-                sleep(1.2)
-                if success_element:
-                    print(f"Job submitted successfully for the title {job_title} to {company_name}\n\n")
-                    sleep(1)
-                else:
-                    try:
-                        if link_text.text !='Applied':
-                            
-                            print(f"Job submission failed for the title {job_title} to {company_name}.\n")
-                            job_data.append([job_title, company_name, "Submission Failed ", salary, recruiters_details ,driver.current_url, '','',''])
-                        else: ...
-                    except:
-                        driver.refresh()
-                        driver.back()
 
-                # close the driver for current job portal
-                driver.close()
-
-                # add the job to the set
-                applied_jobs.add(job)
-
-                # Switch back to the original tab.
-                driver.switch_to.window(current_window_handle)
-
+                except:
+                    print(f"\nIssue in one submitting request for the job {job}\n")
+            
             timestamp = datetime.now().strftime("%d_%m__%H__%M%S")
-        
             main_directory = "Naukri_Jobs_cv"
             if not os.path.exists(main_directory):
                 os.makedirs(main_directory)
 
-            # Create the directory for the current date if it doesn't exist
+            ### Create the directory for the current date if it doesn't exist
             directory_name = datetime.now().strftime("%Y-%m-%d")
             directory_path = os.path.join(main_directory, directory_name)
             if not os.path.exists(directory_path):
                 os.makedirs(directory_path)
-
-            # Construct the full file path with the directory and file name
+            ### Construct the full file path with the directory and file name
             csv_file_path = os.path.join(directory_path, f"job_data_{timestamp}.csv")
-
-            # Create a DataFrame from the job data
+            ### Create a DataFrame from the job data
             df = pd.DataFrame(job_data, columns=["Job Title", "Company Name", "Status", "CTC", "Recruiters Details" ,"URL", "question_text", "input type", "user input text"])
-            
-        
             df.to_csv(csv_file_path, index=False)
-
-            # Print a success message
+            ### Print a success message
             print(f"\nJob data has been saved to {csv_file_path}\n")
 
         driver.quit()
 
     except Exception as e:
         print(str(e),'\n')
-        print("\nIssue in one submitting request for the job\n")
+        print("\nIssue in the RPA\n")
 
 def manual_intervention():
     websites = ['freshworks', 'tejas networks', 'amdocs', 'remotive', 'flexjobs', 'simplyhired', 'workingnomads', 'remoteok', 'remoterocketship', 'telus international', 'ets', 'quillbot']

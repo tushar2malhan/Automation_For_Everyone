@@ -1,0 +1,12 @@
+we make sure we try to open the website webpage, by checking with keyword careers, jobs,  or anything related to positions 
+- secondly we also need to check for extension after clicking the webpage 
+like current url dosen't work which is https://www.tejasnetworks.com/careers 
+but this url works which is https://www.tejasnetworks.com/careerscareers.php
+so we make sure we try to place each extension on each  keyword related to keyword careers, jobs,  or anything related to positions 
+
+
+        driver.get(driver.current_url+'careers')
+        
+        if "404" in driver.page_source or "Page not found" in driver.page_source:
+            print("404 Error or Page not found message is displayed.")
+            continue
