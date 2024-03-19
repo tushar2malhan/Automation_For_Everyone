@@ -89,6 +89,7 @@ question_mappings = {
     'website':my_info.get              ('Github','https://github.com/tushar2malhan'),
     'gender':                          ("Male"),
     'country':my_info.get              ('Country',my_info.get("country", "india")),
+    'night shift':my_info.get          ('Night','No'),
     "skills": skills
 }
 
@@ -379,8 +380,14 @@ def chatbot_questionnaire():
                     user_input = question_mappings.get(matched_key)  if question_mappings.get(matched_key) else int(input('\n\tEnter Your option Number: ')) if radio_button_options else print('We are done\n')
 
                     try:
-                        automated_answer = [(index,option) for index, option in radio_button_options.items() if option.startswith(user_input) ][0]
-                        radio_button_to_select = radio_buttons[automated_answer[0] - 1 ]
+                        automated_answer = [(index,option) for index, option in radio_button_options.items() if option.startswith(user_input) ]
+                        if automated_answer:
+                            automated_answer = automated_answer[0]
+                            radio_button_to_select = radio_buttons[automated_answer[0] - 1 ]
+                        else:
+                            user_input = int(input('\n\tEnter Your option Number: ')) 
+                            radio_button_to_select = radio_buttons[user_input - 1]
+
                         if  not radio_button_to_select.is_enabled():
                             radio_button_to_select = radio_buttons[user_input - 1]
                     except:
@@ -463,8 +470,8 @@ def chatbot_questionnaire():
             send_btn = driver.find_element(By.CLASS_NAME,'sendMsg')
             send_btn.click()
         
-    except:
-        print("No More Chat bot questions asked ‼️\n")
+    except Exception as e :
+        print(f"No More Chat bot questions asked ‼️\n {e}")
     
 def predict_selected_country(input_text):
     # Load the model and vectorizer

@@ -459,13 +459,15 @@ def manual_apply(job_data, job_title, company_name):
         initialize_information()
         sleep(3)
         signin = driver.find_elements(By.PARTIAL_LINK_TEXT, 'Sign')
-        # elements_with_aria_label = [i.find_elements(By.CSS_SELECTOR, '[aria-label]') for i in input_elements]
+        
+        ### Find the elements with aria label if via text not found !
+
         elements_with_aria_label = driver.find_elements(By.CSS_SELECTOR, '[aria-label^="Sign"]')
         if not signin:
             for element in elements_with_aria_label:
                 aria_label_value = element.get_attribute('aria-label')
                 print(f'Element Text: {element.text}, Aria-label Value: {aria_label_value}')
-                element.click()
+                [element.click() for i in range(5)]
                 break
         else:
             signin.click()
@@ -1084,6 +1086,17 @@ def initialize_information():
         if not input_elements:
             input_elements = driver.find_elements(By.TAG_NAME,'input')
             input_elements = [i  for i in input_elements if  i.get_attribute('value') =='']
+
+        if len(input_elements) <=1:
+            frames = [i.get_attribute('name') for i in driver.find_elements(By.TAG_NAME, 'iframe') if i.get_attribute('name') ]
+            
+            # Switch to the first frame
+            iframes_with_names = [frame for frame in frames if frame.get_attribute('name')]
+            if iframes_with_names:
+                main_frame_name = iframes_with_names[0].get_attribute('name')
+                driver.switch_to.frame(main_frame_name)
+                input_elements = driver.find_elements(By.TAG_NAME,'input')
+
         try:
             try:
                 resume_button = driver.find_element(By.XPATH, "//button[contains(., 'resume') or contains(., 'Select file')]")
@@ -1466,9 +1479,9 @@ def naukri_portal(experience, job_title, location, job_age, exclude_keywords):
                         print(f"Found some issues in getting meta info from the job we need to click \n" )
 
                         print("############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n")
-                        
-                        
-
+                        if 'There was an error loading the page. Please reload to view the content' in driver.page_source:
+                            print('1')
+                            continue                        
                         company_name = driver.title
                         result = manual_apply(job_data, job_title, company_name)
                         if result == "Career Section Unavailable":
@@ -1501,7 +1514,12 @@ def naukri_portal(experience, job_title, location, job_age, exclude_keywords):
                             continue
 
                     except NoSuchElementException:
-                        print('\n############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n')
+                        
+                        
+                        print("############## PORTAL TO APPLY DIRECTLY ON THE WEBSITE ############# \n")
+                        if 'There was an error loading the page. Please reload to view the content' in driver.page_source:
+                            print('1')
+                            continue      
                         try:
                             link_text = driver.find_element(By.CLASS_NAME, "company-site-button")
                             link_text.click()
